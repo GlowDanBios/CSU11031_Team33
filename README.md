@@ -3,3 +3,4 @@ Programming project for CSU11031 course. The goal of the project is to s to cons
 
 Member names:
 Danila Romanenko - 22338674
+Ryan Duffy - 23373365
