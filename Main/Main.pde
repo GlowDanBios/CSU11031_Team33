@@ -10,7 +10,7 @@ void setup() {
   background(backgroundColor);
   data = getAllFlights();
   for(DataPoint point:data){
-    println(point.getString());
+    println(point);
   }
 }
 

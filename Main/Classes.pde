@@ -29,7 +29,7 @@ class Date {
     return year;
   }
 
-  String getString() {
+  String toString() {
     return (day<10?"0":"")+day+"/"+(month<10?"0":"")+month+"/"+year;
   }
 }
@@ -66,7 +66,7 @@ class Time {
     return minute;
   }
 
-  String getString() {
+  String toString() {
     return (hour<10?"0":"")+hour+":"+(minute<10?"0":"")+minute;
   }
 }
@@ -102,7 +102,7 @@ class Airport {
     return WAC;
   }
   
-  String getString(){
+  String toString(){
     return code+", "+cityName+", "+state+", "+WAC;
   }
 }
@@ -154,7 +154,7 @@ class DataPoint {
     distance = Integer.parseInt(parts[17]);
   }
   
-  String getString(){
-    return date.getString()+", "+IATA+", "+flightNumber+", "+origin.getString()+", "+destination.getString()+", "+CRSDepTime.getString()+", "+DepTime.getString()+", "+CRSArrTime.getString()+", "+ArrTime.getString()+", "+distance;
+  String toString(){
+    return date+", "+IATA+", "+flightNumber+", "+origin+", "+destination+", "+CRSDepTime+", "+DepTime+", "+CRSArrTime+", "+ArrTime+", "+distance;
   }
 }
