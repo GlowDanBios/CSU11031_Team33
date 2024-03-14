@@ -12,10 +12,10 @@ String category;
  
   void getFlights(){
     for (TableRow row : table.findRows(entry, category)){
-      String source = row.getString("ORIGIN_CITY_NAME");
-     String data = row.getString("DEST_CITY_NAME");
+      String category1 = row.getString("ORIGIN_CITY_NAME");
+     String category2 = row.getString("DEST_CITY_NAME");
 
-     println(source + data);
+     println(category1 + category2);
     }
   }
 }
