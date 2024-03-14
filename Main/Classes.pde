@@ -67,7 +67,7 @@ class Time {
   }
 
   String getString() {
-    return hour+":"+minute;
+    return (hour<10?"0":"")+hour+":"+(minute<10?"0":"")+minute;
   }
 }
 
@@ -100,6 +100,10 @@ class Airport {
 
   String getWAC() {
     return WAC;
+  }
+  
+  String getString(){
+    return code+", "+cityName+", "+state+", "+WAC;
   }
 }
 
@@ -148,5 +152,9 @@ class DataPoint {
     cancelled = parts[15] == "1";
     diverted = parts[16] == "1";
     distance = Integer.parseInt(parts[17]);
+  }
+  
+  String getString(){
+    return date.getString()+", "+IATA+", "+flightNumber+", "+origin.getString()+", "+destination.getString()+", "+CRSDepTime.getString()+", "+DepTime.getString()+", "+CRSArrTime.getString()+", "+ArrTime.getString()+", "+distance;
   }
 }
