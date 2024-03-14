@@ -6,7 +6,7 @@ size(400,400);
 table = loadTable("flights2k(1).csv", "header");
 println(table.getRowCount());
   
-  specificEntry dest = new specificEntry(table, "ORIGIN", "JFK");
-  dest.getFlights();
+  specificEntry flight = new specificEntry(table, "ORIGIN", "JFK");
+  flight.getFlights();
  
 }
