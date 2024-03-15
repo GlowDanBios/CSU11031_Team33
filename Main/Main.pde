@@ -14,6 +14,7 @@ void setup () {
   gTable = new TableView(table, 0, 0);
   tableScreen.addWidget(gTable);
   activeScreen = tableScreen;
+
 }
 
 void draw() {
