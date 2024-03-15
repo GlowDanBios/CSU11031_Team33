@@ -1,29 +1,20 @@
-class Date {
-  //written by Danila Romanenko
-  
-  int day;
-  int month;
-  int year;
 
-  Date(int day, int month, int year) {
-    this.day = day;
-    this.month = month;
-    this.year = year;
+class specificEntry {
+  Table table;
+  String entry;
+  String category;
+
+  specificEntry(Table table1, String category1, String desiredEntry) {
+    table = table1;
+    entry = desiredEntry;
+    category = category1;
   }
 
-  Date(String date) {
-    day = Integer.parseInt(date.substring(0, 2));
-    month = Integer.parseInt(date.substring(3, 5));
-    year = Integer.parseInt(date.substring(6, 10));
-  }
 
-  int getDay() {
-    return day;
-  }
-
-  int getMonth() {
-    return month;
-  }
+  void getFlights() {
+    for (TableRow row : table.findRows(entry, category)) {
+      String category1 = row.getString("ORIGIN_CITY_NAME");
+      String category2 = row.getString("DEST_CITY_NAME");
 
   int getYear() {
     return year;
@@ -37,26 +28,11 @@ class Date {
 class Time {
   //written by Danila Romanenko
 
-  int hour;
-  int minute;
 
-  Time(int hour, int minute) {
-    this.hour = hour;
-    this.minute = minute;
-  }
-
-  Time(String time) {
-    if (time.length() == 4) {
-      hour = Integer.parseInt(time.substring(0, 2));
-      minute = Integer.parseInt(time.substring(2, 4));
-    } else if (time.length() == 3) {
-      hour = Integer.parseInt(time.substring(0, 1));
-      minute = Integer.parseInt(time.substring(1, 3));
-    } else {
-      hour = 0;
-      minute = 0;
+      println(category1 + category2);
     }
   }
+
 
   int getHour() {
     return hour;

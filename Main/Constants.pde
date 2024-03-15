@@ -1,5 +1,9 @@
-final int windowWidth = 1200;
-final int windowHeight = 800;
-final color backgroundColor = color(255);
-
-final String mainFileName = "flights2k.csv";
+final int WINDOW_WIDTH = 1200;
+final int WINDOW_HEIGHT = 800;
+final color BACKGROUND_COLOR = color(255);
+final color TEXT_COLOR = color(0);
+final int CHARACTER_WIDTH = 8;
+final int SCROLL_SPEED = 10;
+final int TABLE_TOP_BORDER = 20;
+final int TABLE_LEFT_BORDER = 20;
+final String MAIN_FILE_NAME = "flights2k.csv";
