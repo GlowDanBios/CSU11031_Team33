@@ -1,5 +1,6 @@
 class Widget {
   int x, y;
+  boolean clickable;
 
   Widget(int x, int y) {
     this.x = x;
@@ -8,17 +9,30 @@ class Widget {
 
   void draw(int x, int y) {
   }
+
+  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
+    return false;
+  }
+
+  void select() {
+  }
+
+  void unselect() {
+  }
+
+  void enter(char key) {
+  }
 }
 
 class TableView extends Widget {
   Table table;
   int[] columnStarts;
-  int x, y;
 
   TableView(Table table, int x, int y) {
     super(x, y);
     this.table = table;
     setColumnWidths();
+    clickable = false;
   }
 
   void setColumnWidths() {
@@ -33,7 +47,7 @@ class TableView extends Widget {
       if (i==0) {
         columnStarts[i] = 0;
       } else {
-        columnStarts[i] = columnStarts[i-1]+previousWidth*CHARACTER_WIDTH;
+        columnStarts[i] = columnStarts[i-1]+previousWidth*CHARACTER_WIDTH+COLUMN_SPACE;
       }
       previousWidth = width;
     }
@@ -50,6 +64,66 @@ class TableView extends Widget {
     }
   }
 }
+
+class Input extends Widget {
+  String inputString;
+  int width, height;
+  int cursorLocation;
+  boolean selected;
+
+  int blink;
+
+  Input(int x, int y, int width, int height) {
+    super(x, y);
+    this.width = width;
+    this.height = height;
+    inputString = "";
+    clickable = true;
+  }
+
+  void select() {
+    selected = true;
+    blink = 0;
+  }
+
+  void unselect() {
+    selected = false;
+  }
+
+  void enter(char key) {
+    if (keyCode ==8) {
+      if (inputString.length()>0) {
+        inputString = inputString.substring(0, inputString.length()-1);
+      }
+    } else if (key!=CODED) {
+      inputString += key;
+    }
+  }
+
+  void draw(int screenX, int screenY) {
+    fill(BACKGROUND_COLOR);
+    stroke(0);
+
+    rect(screenX+x, screenY+y, width, height);
+    fill(0);
+    text(inputString, screenX+x+2, screenY+y+height/2+2);
+    if (selected) {
+      fill(0);
+      if (blink<BLINK_INTERVAL) line(screenX+x+inputString.length()*CHARACTER_WIDTH+5, screenY+y+5, screenX+x+inputString.length()*CHARACTER_WIDTH+5, screenY+y+height-5);
+      else if (blink>BLINK_INTERVAL*2) blink = 0;
+      blink++;
+    }
+  }
+
+  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
+    return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
+  }
+
+  String getInput() {
+    return inputString;
+  }
+}
+
 
 class Screen {
   int x, y;
