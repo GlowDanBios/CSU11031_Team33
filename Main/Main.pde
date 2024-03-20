@@ -1,6 +1,7 @@
 Table table;
 TableView gTable;
 Screen tableScreen;
+Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
 
@@ -15,6 +16,10 @@ void setup () {
   tableScreen.addWidget(new Input(10, 0, 300, 30));
   gTable = new TableView(table, 0, 50);
   tableScreen.addWidget(gTable);
+  
+  barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  barScreen.addWidget(new BarChart(10,10,500,250, new int[]{5,10,10,3,7}, new String[]{"a","b","c","d","e"}));
+  
   activeScreen = tableScreen;
 }
 
@@ -35,6 +40,8 @@ void keyPressed() {
         activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY());
     } else if (key == 'd') {
       activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
+    } else if(key == 'm'){
+      activeScreen = barScreen;
     }
   }
   else{
