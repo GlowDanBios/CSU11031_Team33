@@ -38,27 +38,16 @@ void keyPressed() {
     }
   }
   else{
-    selectedWidget.enter(key);
+    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
     
   }
 }
 
 void mousePressed() {
   ArrayList<Widget> screenWidgets = activeScreen.getWidgets();
-  boolean selectedAnthing = false;
 
 
   for (Widget widget : screenWidgets) {
-    if (widget.clickable) {
-      if (widget.clicked(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY)) {
-        widget.select();
-        selectedWidget = widget;
-        selectedAnthing = true;
-      }
-    }
-  }
-  if (!selectedAnthing && selectedWidget!=null) {
-    selectedWidget.unselect();
-    selectedWidget = null;
+    widget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, true);
   }
 }

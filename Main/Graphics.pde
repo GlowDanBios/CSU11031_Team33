@@ -10,17 +10,7 @@ class Widget {
   void draw(int x, int y) {
   }
 
-  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
-    return false;
-  }
-
-  void select() {
-  }
-
-  void unselect() {
-  }
-
-  void enter(char key) {
+  void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
   }
 }
 
@@ -39,15 +29,15 @@ class TableView extends Widget {
     columnStarts = new int[table.getColumnCount()];
     int previousWidth = 0;
     for (int i = 0; i <table.getColumnCount(); i++) {
-      int width = table.getColumnTitle(i).length();
+      int width = (int)textWidth(table.getColumnTitle(i));
       String[] col = table.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
-        if (col[j].length()>width) width = col[j].length();
+        if ((int)textWidth(col[j])>width) width = (int)textWidth(col[j]);
       }
       if (i==0) {
         columnStarts[i] = 0;
       } else {
-        columnStarts[i] = columnStarts[i-1]+previousWidth*CHARACTER_WIDTH+COLUMN_SPACE;
+        columnStarts[i] = columnStarts[i-1]+previousWidth+COLUMN_SPACE;
       }
       previousWidth = width;
     }
@@ -81,22 +71,31 @@ class Input extends Widget {
     clickable = true;
   }
 
-  void select() {
-    selected = true;
-    blink = 0;
+  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
+    return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
   }
 
-  void unselect() {
-    selected = false;
-  }
+  void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
+    if (click) {
+      if (clicked(screenX, screenY, mouseX, mouseY)) {
+        selected = true;
+        selectedWidget = this;
+        blink = 0;
+      } else {
+        selected = false;
+        selectedWidget = null;
 
-  void enter(char key) {
-    if (keyCode ==8) {
-      if (inputString.length()>0) {
-        inputString = inputString.substring(0, inputString.length()-1);
       }
-    } else if (key!=CODED) {
-      inputString += key;
+    } else {
+      if (selected) {
+        if (keyCode ==8) {
+          if (inputString.length()>0) {
+            inputString = inputString.substring(0, inputString.length()-1);
+          }
+        } else if (key!=CODED) {
+          inputString += key;
+        }
+      }
     }
   }
 
@@ -106,17 +105,23 @@ class Input extends Widget {
 
     rect(screenX+x, screenY+y, width, height);
     fill(0);
-    text(inputString, screenX+x+2, screenY+y+height/2+2);
+    text(inputString.substring(textWidth(inputString)>width?lastEl():0), screenX+x+2, screenY+y+height/2+2);
     if (selected) {
       fill(0);
-      if (blink<BLINK_INTERVAL) line(screenX+x+inputString.length()*CHARACTER_WIDTH+5, screenY+y+5, screenX+x+inputString.length()*CHARACTER_WIDTH+5, screenY+y+height-5);
+      if (blink<BLINK_INTERVAL) line(screenX+x+(textWidth(inputString)>width?width-1:textWidth(inputString)+1), screenY+y+5, screenX+x+(textWidth(inputString)>width?width-1:textWidth(inputString)+1), screenY+y+height-5);
       else if (blink>BLINK_INTERVAL*2) blink = 0;
       blink++;
     }
   }
 
-  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
-    return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
+
+  int lastEl(){
+    for(int i = inputString.length()-1;i>0;i--){
+      if(textWidth(inputString.substring(i))>width){
+        return i+1;
+      }
+    }
+    return 0;
   }
 
   String getInput() {
