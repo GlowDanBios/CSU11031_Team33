@@ -129,18 +129,21 @@ class BarChart extends Widget {
   int width, height;
   int colSpace;
   int colWidth;
+  String xAxis, yAxis;
 
-  BarChart(int x, int y, int width, int height, int[] values, String names[]) {
+  BarChart(int x, int y, int width, int height, String xAxis, String yAxis, int[] values, String names[]) {
     super(x, y);
     this.width = width;
     this.height = height;
+    this.xAxis= xAxis;
+    this.yAxis = yAxis;
     int colNum = values.length;
     colWidth = (int)((width/colNum)/1.2);
     colSpace = colWidth/5;
     int maxVal = max(values);
     bars = new Bar[colNum];
     for (int i = 0; i <values.length; i++) {
-      bars[i] = new Bar(values[i], color(100, 0, 0), colWidth, (int)(((float)values[i]/maxVal)*height), names[i], height);
+      bars[i] = new Bar(values[i], color(100, 0, 0), colWidth, (int)(((float)values[i]/maxVal)*0.9*height), names[i], height);
     }
   }
 
@@ -150,6 +153,8 @@ class BarChart extends Widget {
     for (int i =0; i<bars.length; i++) {
       bars[i].draw(screenX+x+20+i*(colSpace+colWidth), screenY+y, screenX+x);
     }
+    text(xAxis, screenX+x-10, screenY+y);
+    text(yAxis, screenX+width, screenY+y+height+15);
   }
 }
 
