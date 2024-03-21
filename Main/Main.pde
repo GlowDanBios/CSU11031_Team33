@@ -3,6 +3,7 @@ TableView gTable;
 Screen tableScreen;
 Screen activeScreen;
 Widget selectedWidget;
+Query first = new Query(table, "JFK", "FLL", "ORIGIN");
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -21,6 +22,8 @@ void setup () {
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
+   first.chart();
+
 }
 
 void keyPressed() {
