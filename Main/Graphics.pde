@@ -16,21 +16,23 @@ class Widget {
 
 class TableView extends Widget {
   Table table;
+  Table displayedTable;
   int[] columnStarts;
 
   TableView(Table table, int x, int y) {
     super(x, y);
     this.table = table;
+    displayedTable = table;
     setColumnWidths();
     clickable = false;
   }
 
   void setColumnWidths() {
-    columnStarts = new int[table.getColumnCount()];
+    columnStarts = new int[displayedTable.getColumnCount()];
     int previousWidth = 0;
-    for (int i = 0; i <table.getColumnCount(); i++) {
-      int width = (int)textWidth(table.getColumnTitle(i));
-      String[] col = table.getStringColumn(i);
+    for (int i = 0; i <displayedTable.getColumnCount(); i++) {
+      int width = (int)textWidth(displayedTable.getColumnTitle(i));
+      String[] col = displayedTable.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
         if ((int)textWidth(col[j])>width) width = (int)textWidth(col[j]);
       }
@@ -45,9 +47,9 @@ class TableView extends Widget {
 
   void draw(int screenX, int screenY) {
     fill(TEXT_COLOR);
-    for (int i = 0; i <table.getColumnCount(); i++) {
-      text(table.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
-      String[] col = table.getStringColumn(i);
+    for (int i = 0; i <displayedTable.getColumnCount(); i++) {
+      text(displayedTable.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
+      String[] col = displayedTable.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
         text(col[j], screenX+x+columnStarts[i], screenY+y+20+j*20);
       }
