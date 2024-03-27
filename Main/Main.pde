@@ -4,6 +4,7 @@ Screen tableScreen;
 Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
+Button searchButton;
 Query origin;
 
 void settings() {
@@ -14,7 +15,10 @@ void setup () {
   table = loadTable("Files/flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  tableScreen.addWidget(new Input(10, 0, 300, 30));
+  //tableScreen.addWidget(new Input(10, 0, 300, 30));
+  //searchButton = new Button(350, 0, 50, 30, "Search");
+  //tableScreen.addWidget(searchButton);
+  
   gTable = new TableView(table, 0, 50);
   tableScreen.addWidget(gTable);
   

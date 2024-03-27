@@ -18,6 +18,9 @@ class TableView extends Widget {
   Table table;
   Table displayedTable;
   int[] columnStarts;
+  String sortedBy;
+  boolean sortReverse = false;
+  Button[] columnNames;
 
   TableView(Table table, int x, int y) {
     super(x, y);
@@ -25,6 +28,13 @@ class TableView extends Widget {
     displayedTable = cleanData(table);
     setColumnWidths();
     clickable = false;
+    columnNames = new Button[displayedTable.getColumnCount()];
+    for (int i = 0; i<displayedTable.getColumnCount(); i++) {
+      columnNames[i] = new Button(x+columnStarts[i], y-ROW_HEIGHT, columnStarts[i+1]-columnStarts[i]-10, ROW_HEIGHT, displayedTable.getColumnTitle(i));
+      SortClick obs = new SortClick(this);
+      tableScreen.addWidget(columnNames[i]);
+      columnNames[i].addObserver(obs);
+    }
   }
 
   void setColumnWidths() {
@@ -32,9 +42,9 @@ class TableView extends Widget {
     int previousWidth = 0;
     for (int i = 0; i <displayedTable.getColumnCount()+1; i++) {
       int width;
-      if(i<displayedTable.getColumnCount())
+      if (i<displayedTable.getColumnCount())
         width = (int)textWidth(displayedTable.getColumnTitle(i));
-      else{
+      else {
         columnStarts[i] = columnStarts[i-1]+previousWidth;
         return;
       }
@@ -54,23 +64,31 @@ class TableView extends Widget {
   void draw(int screenX, int screenY) {
     fill(TEXT_COLOR);
     for (int i = 0; i <displayedTable.getColumnCount(); i++) {
-      if (i!=15 && i!=16)
-        text(displayedTable.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
+      if (sortedBy!=null && sortedBy.equals(columnNames[i].text)) {
+        if (sortReverse) {
+          columnNames[i].setColor(color(200, 0, 0, 100));
+        } else {
+          columnNames[i].setColor(color(0, 200, 0, 100));
+        }
+      } else {
+        columnNames[i].setColor(255);
+      }
+      columnNames[i].draw(screenX, screenY);
       String[] col = displayedTable.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
         if (i == 1) {
           if (isCancelled(col[j])) {
             fill(200, 0, 0, 100);
-            rect(screenX+x, screenY+y+20+j*20, columnStarts[columnStarts.length-1], 20);
+            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
             fill(TEXT_COLOR);
           } else if (isDiverted(col[j])) {
             fill(200, 200, 0, 100);
-            rect(screenX+x, screenY+y+20+j*20, screenX+x+WINDOW_WIDTH, 20);
+            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
             fill(TEXT_COLOR);
           }
         }
 
-        text(col[j], screenX+x+columnStarts[i], screenY+y+20+j*20);
+        text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
       }
     }
   }
@@ -83,16 +101,16 @@ class TableView extends Widget {
     returnTable.addColumn("ORIGIN");
     returnTable.addColumn("ORIGIN_CITY_NAME");
     returnTable.addColumn("ORIGIN_STATE_ABR");
-    returnTable.addColumn("ORIGIN_WAC");
+    returnTable.addColumn("ORIGIN_WAC", Table.INT);
     returnTable.addColumn("DEST");
     returnTable.addColumn("DEST_CITY_NAME");
     returnTable.addColumn("DEST_STATE_ABR");
-    returnTable.addColumn("DEST_WAC");
+    returnTable.addColumn("DEST_WAC", Table.INT);
     returnTable.addColumn("CRS_DEP_TIME");
     returnTable.addColumn("DEP_TIME");
     returnTable.addColumn("CRS_ARR_TIME");
     returnTable.addColumn("ARR_TIME");
-    returnTable.addColumn("DISTANCE");
+    returnTable.addColumn("DISTANCE", Table.INT);
     for (int i = 0; i<originalTable.getRowCount(); i++) {
       TableRow row = originalTable.getRow(i);
       TableRow newRow = returnTable.addRow();
@@ -101,16 +119,16 @@ class TableView extends Widget {
       newRow.setString("ORIGIN", row.getString("ORIGIN"));
       newRow.setString("ORIGIN_CITY_NAME", row.getString("ORIGIN_CITY_NAME"));
       newRow.setString("ORIGIN_STATE_ABR", row.getString("ORIGIN_STATE_ABR"));
-      newRow.setString("ORIGIN_WAC", row.getString("ORIGIN_WAC"));
+      newRow.setInt("ORIGIN_WAC", Integer.parseInt(row.getString("ORIGIN_WAC")));
       newRow.setString("DEST", row.getString("DEST"));
       newRow.setString("DEST_CITY_NAME", row.getString("DEST_CITY_NAME"));
       newRow.setString("DEST_STATE_ABR", row.getString("DEST_STATE_ABR"));
-      newRow.setString("DEST_WAC", row.getString("DEST_WAC"));
+      newRow.setInt("DEST_WAC", Integer.parseInt(row.getString("DEST_WAC")));
       newRow.setString("CRS_DEP_TIME", row.getString("CRS_DEP_TIME"));
       newRow.setString("DEP_TIME", row.getString("DEP_TIME"));
       newRow.setString("CRS_ARR_TIME", row.getString("CRS_ARR_TIME"));
       newRow.setString("ARR_TIME", row.getString("ARR_TIME"));
-      newRow.setString("DISTANCE", row.getString("DISTANCE"));
+      newRow.setInt("DISTANCE", Integer.parseInt(row.getString("DISTANCE")));
     }
     return returnTable;
   }
@@ -131,6 +149,25 @@ class TableView extends Widget {
       if (row.getString("MKT_CARRIER_FL_NUM").equals(flNum)) return row.getString("DIVERTED").equals("1");
     }
     return false;
+  }
+
+  void sort(String col) {
+    if (sortedBy == null) {
+      displayedTable.sort(col);
+      sortedBy = col;
+    } else if (sortedBy.equals(col)) {
+      sortReverse = !sortReverse;
+      if (sortReverse) {
+        displayedTable.sortReverse(col);
+      } else {
+        displayedTable = cleanData(table);
+        sortedBy = null;
+      }
+    } else {
+      displayedTable = cleanData(table);
+      displayedTable.sort(col);
+      sortedBy = col;
+    }
   }
 }
 
@@ -265,25 +302,71 @@ class Bar {
   }
 }
 
+interface ButtonObserver {
+  void buttonClicked(Button button);
+}
+
 class Button extends Widget {
+  ArrayList<ButtonObserver> observers;
   String text;
   int width, height;
+  color c;
 
   Button(int x, int y, int width, int height, String text) {
     super(x, y);
     this.width = width;
     this.height = height;
     this.text = text;
+    observers = new ArrayList<ButtonObserver>();
   }
 
   void draw(int screenX, int screenY) {
-    fill(255);
+    fill(c);
     rect(screenX+x, screenY+y, width, height);
     fill(0);
-    text(text, screenX+x, screenY+y+height/2);
+    text(text, screenX+x, screenY+y+3*height/4);
+  }
+  void addObserver(ButtonObserver observer) {
+    observers.add(observer);
+  }
+  void removeObserver(ButtonObserver observer) {
+    observers.remove(observer);
+  }
+
+  void notifyObservers() {
+    for (ButtonObserver observer : observers) {
+      observer.buttonClicked(this);
+    }
+  }
+
+  void setColor(color c) {
+    this. c = c;
+  }
+
+  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
+    return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
+  }
+
+  void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
+    if (click) {
+      if (clicked(screenX, screenY, mouseX, mouseY)) {
+        notifyObservers();
+      }
+    }
   }
 }
 
+
+class SortClick implements ButtonObserver {
+  TableView table;
+
+  SortClick(TableView table) {
+    this.table = table;
+  }
+  void buttonClicked(Button button) {
+    table.sort(button.text);
+  }
+}
 
 class Screen {
   int x, y;
