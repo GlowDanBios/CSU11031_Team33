@@ -121,3 +121,21 @@
 //    return date+", "+IATA+", "+flightNumber+", "+origin+", "+destination+", "+CRSDepTime+", "+DepTime+", "+CRSArrTime+", "+ArrTime+", "+distance;
 //  }
 //}
+//class ButtonClick implements ButtonObserver {  // Written by James McNamee
+//    void buttonClicked(Button button) {
+//       if (button == searchButton) {
+//            // Get user-input departure and return dates
+//            String departureString = departureInput.getInput();
+//            String returnString = returnInput.getInput();
+//            
+//            // Convert strings to Date objects (you may need to implement this conversion)
+//            Date departureDate = convertToDate(departureString);
+//            Date returnDate = convertToDate(returnString);
+//            
+//            // Perform date range query
+//            ArrayList<DataPoint> filteredData = queryDateRange(dataSet, departureDate, returnDate);
+//            
+//            // Use filteredData for further processing or display
+//        }
+//    }
+//}
