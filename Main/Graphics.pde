@@ -16,39 +16,21 @@ class Widget {
 
 class TableView extends Widget {
   Table table;
-  Table displayedTable;
   int[] columnStarts;
-  String sortedBy;
-  boolean sortReverse = false;
-  Button[] columnNames;
 
   TableView(Table table, int x, int y) {
     super(x, y);
     this.table = table;
-    displayedTable = cleanData(table);
     setColumnWidths();
     clickable = false;
-    columnNames = new Button[displayedTable.getColumnCount()];
-    for (int i = 0; i<displayedTable.getColumnCount(); i++) {
-      columnNames[i] = new Button(x+columnStarts[i], y-ROW_HEIGHT, columnStarts[i+1]-columnStarts[i]-10, ROW_HEIGHT, displayedTable.getColumnTitle(i));
-      SortClick obs = new SortClick(this);
-      tableScreen.addWidget(columnNames[i]);
-      columnNames[i].addObserver(obs);
-    }
   }
 
   void setColumnWidths() {
-    columnStarts = new int[displayedTable.getColumnCount()+1];
+    columnStarts = new int[table.getColumnCount()];
     int previousWidth = 0;
-    for (int i = 0; i <displayedTable.getColumnCount()+1; i++) {
-      int width;
-      if (i<displayedTable.getColumnCount())
-        width = (int)textWidth(displayedTable.getColumnTitle(i));
-      else {
-        columnStarts[i] = columnStarts[i-1]+previousWidth;
-        return;
-      }
-      String[] col = displayedTable.getStringColumn(i);
+    for (int i = 0; i <table.getColumnCount(); i++) {
+      int width = (int)textWidth(table.getColumnTitle(i));
+      String[] col = table.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
         if ((int)textWidth(col[j])>width) width = (int)textWidth(col[j]);
       }
@@ -63,126 +45,12 @@ class TableView extends Widget {
 
   void draw(int screenX, int screenY) {
     fill(TEXT_COLOR);
-    for (int i = 0; i <displayedTable.getColumnCount(); i++) {
-      if (sortedBy!=null && sortedBy.equals(columnNames[i].text)) {
-        if (sortReverse) {
-          columnNames[i].setColor(color(200, 0, 0, 100));
-        } else {
-          columnNames[i].setColor(color(0, 200, 0, 100));
-        }
-      } else {
-        columnNames[i].setColor(255);
-      }
-      columnNames[i].draw(screenX, screenY);
-      String[] col = displayedTable.getStringColumn(i);
+    for (int i = 0; i <table.getColumnCount(); i++) {
+      text(table.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
+      String[] col = table.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
-        if (i == 1) {
-          if (isCancelled(col[j])) {
-            fill(200, 0, 0, 100);
-            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
-            fill(TEXT_COLOR);
-          } else if (isDiverted(col[j])) {
-            fill(200, 200, 0, 100);
-            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
-            fill(TEXT_COLOR);
-          }
-        }
-        if (i<10 || i>13) {
-          text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
-        } else {
-          String a = ""+col[j];
-          if(a.length()==1){
-            a = "00:0"+a;
-          }
-          else if(a.length()==2){
-            a = "00:"+a;
-          }
-          else if(a.length() == 3){
-            a = "0"+a.substring(0,1)+":"+a.substring(1);
-          }
-          else{
-            a = a.substring(0,2)+":"+a.substring(2);
-          }
-          text(a, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
-        }
+        text(col[j], screenX+x+columnStarts[i], screenY+y+20+j*20);
       }
-    }
-  }
-
-
-  Table cleanData(Table originalTable) {
-    Table returnTable = new Table();
-    returnTable.addColumn("FL_DATE");
-    returnTable.addColumn("MKT_CARRIER");
-    returnTable.addColumn("ORIGIN");
-    returnTable.addColumn("ORIGIN_CITY_NAME");
-    returnTable.addColumn("ORIGIN_STATE_ABR");
-    returnTable.addColumn("ORIGIN_WAC", Table.INT);
-    returnTable.addColumn("DEST");
-    returnTable.addColumn("DEST_CITY_NAME");
-    returnTable.addColumn("DEST_STATE_ABR");
-    returnTable.addColumn("DEST_WAC", Table.INT);
-    returnTable.addColumn("CRS_DEP_TIME", Table.INT);
-    returnTable.addColumn("DEP_TIME",Table.INT);
-    returnTable.addColumn("CRS_ARR_TIME", Table.INT);
-    returnTable.addColumn("ARR_TIME", Table.INT);
-    returnTable.addColumn("DISTANCE", Table.INT);
-    for (int i = 0; i<originalTable.getRowCount(); i++) {
-      TableRow row = originalTable.getRow(i);
-      TableRow newRow = returnTable.addRow();
-      newRow.setString("FL_DATE", row.getString("FL_DATE").substring(0, 11));
-      newRow.setString("MKT_CARRIER", row.getString("MKT_CARRIER")+row.getString("MKT_CARRIER_FL_NUM"));
-      newRow.setString("ORIGIN", row.getString("ORIGIN"));
-      newRow.setString("ORIGIN_CITY_NAME", row.getString("ORIGIN_CITY_NAME"));
-      newRow.setString("ORIGIN_STATE_ABR", row.getString("ORIGIN_STATE_ABR"));
-      newRow.setInt("ORIGIN_WAC", Integer.parseInt(row.getString("ORIGIN_WAC")));
-      newRow.setString("DEST", row.getString("DEST"));
-      newRow.setString("DEST_CITY_NAME", row.getString("DEST_CITY_NAME"));
-      newRow.setString("DEST_STATE_ABR", row.getString("DEST_STATE_ABR"));
-      newRow.setInt("DEST_WAC", Integer.parseInt(row.getString("DEST_WAC")));
-      newRow.setInt("CRS_DEP_TIME", Integer.parseInt(row.getString("CRS_DEP_TIME")));
-      newRow.setInt("DEP_TIME", row.getString("DEP_TIME").length()>0?Integer.parseInt(row.getString("DEP_TIME")):0);
-      newRow.setInt("CRS_ARR_TIME", Integer.parseInt(row.getString("CRS_ARR_TIME")));
-      newRow.setInt("ARR_TIME", row.getString("ARR_TIME").length()>0?Integer.parseInt(row.getString("ARR_TIME")):0);
-      newRow.setInt("DISTANCE", Integer.parseInt(row.getString("DISTANCE")));
-    }
-    return returnTable;
-  }
-
-  boolean isCancelled(String carr) {
-    String carrier = carr.substring(0, 2);
-    String flNum = carr.substring(2);
-
-    for (TableRow row : table.findRows(carrier, "MKT_CARRIER")) {
-      if (row.getString("MKT_CARRIER_FL_NUM").equals(flNum)) return row.getString("CANCELLED").equals("1");
-    }
-    return false;
-  }
-  boolean isDiverted(String carr) {
-    String carrier = carr.substring(0, 2);
-    String flNum = carr.substring(2);
-    for (TableRow row : table.findRows(carrier, "MKT_CARRIER")) {
-      if (row.getString("MKT_CARRIER_FL_NUM").equals(flNum)) return row.getString("DIVERTED").equals("1");
-    }
-    return false;
-  }
-
-  void sort(String col) {
-    if (sortedBy == null) {
-      displayedTable.sort(col);
-      sortedBy = col;
-    } else if (sortedBy.equals(col)) {
-      sortReverse = !sortReverse;
-      if (sortReverse) {
-        displayedTable.sortReverse(col);
-      } else {
-        displayedTable = cleanData(table);
-        sortedBy = null;
-      }
-    } else {
-      displayedTable = cleanData(table);
-      displayedTable.sort(col);
-      sortedBy = col;
     }
   }
 }
@@ -267,20 +135,35 @@ class BarChart extends Widget {
   int colWidth;
   String xAxis, yAxis;
 
-  BarChart(int x, int y, int width, int height, String xAxis, String yAxis, int[] values, String names[]) {
+  BarChart(int x, int y, int width, int height, String xAxis, String yAxis, int[][] faultyFlights, String names[]) {
     super(x, y);
     this.width = width;
     this.height = height;
     this.xAxis= xAxis;
     this.yAxis = yAxis;
-    int colNum = values.length;
+    int colNum = names.length * 3;
     colWidth = (int)((width/colNum)/1.2);
     colSpace = colWidth/5;
-    int maxVal = max(values);
-    bars = new Bar[colNum];
-    for (int i = 0; i <values.length; i++) {
-      bars[i] = new Bar(values[i], color(100, 0, 0), colWidth, (int)(((float)values[i]/maxVal)*0.9*height), names[i], height);
+    int maxVal = 0;
+    for (int[] array : faultyFlights) {
+      for (int value : array) {
+        if (value > maxVal) {
+            maxVal = value;
+        }
+      }
     }
+       
+    bars = new Bar[colNum];
+    int  value =0;
+    int k = 0;
+    for (int i=0; i<names.length; i++){
+      for (int j=0; j<3; j++){
+         value = faultyFlights[j][i];
+         bars[k +j] = new Bar(value, color(100, 0, 0), colWidth, (int)(((float)value/maxVal)*0.9*height), names[i], height);
+      }
+      k += 3;
+    }
+    
   }
 
   void draw(int screenX, int screenY) {
@@ -291,6 +174,7 @@ class BarChart extends Widget {
     }
     text(xAxis, screenX+x-textWidth(xAxis)/2, screenY+y);
     text(yAxis, screenX+width, screenY+y+height+15);
+    
   }
 }
 
@@ -318,71 +202,25 @@ class Bar {
   }
 }
 
-interface ButtonObserver {
-  void buttonClicked(Button button);
-}
-
 class Button extends Widget {
-  ArrayList<ButtonObserver> observers;
   String text;
   int width, height;
-  color c;
 
   Button(int x, int y, int width, int height, String text) {
     super(x, y);
     this.width = width;
     this.height = height;
     this.text = text;
-    observers = new ArrayList<ButtonObserver>();
   }
 
   void draw(int screenX, int screenY) {
-    fill(c);
+    fill(255);
     rect(screenX+x, screenY+y, width, height);
     fill(0);
-    text(text, screenX+x, screenY+y+3*height/4);
-  }
-  void addObserver(ButtonObserver observer) {
-    observers.add(observer);
-  }
-  void removeObserver(ButtonObserver observer) {
-    observers.remove(observer);
-  }
-
-  void notifyObservers() {
-    for (ButtonObserver observer : observers) {
-      observer.buttonClicked(this);
-    }
-  }
-
-  void setColor(color c) {
-    this. c = c;
-  }
-
-  boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
-    return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
-  }
-
-  void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
-    if (click) {
-      if (clicked(screenX, screenY, mouseX, mouseY)) {
-        notifyObservers();
-      }
-    }
+    text(text, screenX+x, screenY+y+height/2);
   }
 }
 
-
-class SortClick implements ButtonObserver {
-  TableView table;
-
-  SortClick(TableView table) {
-    this.table = table;
-  }
-  void buttonClicked(Button button) {
-    table.sort(button.text);
-  }
-}
 
 class Screen {
   int x, y;
