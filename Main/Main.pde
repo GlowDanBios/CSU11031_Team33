@@ -4,7 +4,6 @@ Screen tableScreen;
 Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
-Button searchButton;
 Query origin;
 
 void settings() {
@@ -12,21 +11,23 @@ void settings() {
 }
 
 void setup () {
-  table = loadTable("Files/flights2k.csv", "header");
+  table = loadTable("flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  //tableScreen.addWidget(new Input(10, 0, 300, 30));
-  //searchButton = new Button(350, 0, 50, 30, "Search");
-  //tableScreen.addWidget(searchButton);
-  
+  tableScreen.addWidget(new Input(10, 0, 300, 30));
   gTable = new TableView(table, 0, 50);
   tableScreen.addWidget(gTable);
   
   barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  //barScreen.addWidget(new Input(10, 400, 300, 30));
-  //barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
-  origin = new Query(table, "JFK", "FLL", "ORIGIN");
-  barScreen.addWidget(new BarChart(10,10,500,250, "Airport", "Flights", new int[]{origin.getFlight("SEA"), origin.getFlight("FLL"), origin.getFlight("DCA")}, new String[]{"SEA", "FLL", "DCA"}));
+  origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
+  String[] entryArray = {"WN", "B6", "AS"};
+  String independentVariable = "MKT_CARRIER";
+  int[][] unreliability = {origin.unreliable(entryArray, "DEP_TIME", independentVariable), origin.unreliable(entryArray, "CANCELLED", independentVariable),
+                            origin.unreliable(entryArray, "DIVERTED", independentVariable)};
+
+  barScreen.addWidget(new BarChart(10,10,500,250, "Airport", "Flights", unreliability,  entryArray ));
+  origin.frequencyDays(1, 10);
+
   
   PFont font = loadFont("AgencyFB-Bold-20.vlw");
   textFont(font);
