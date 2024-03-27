@@ -4,7 +4,7 @@ Screen tableScreen;
 Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
-Query first = new Query(table, "JFK", "FLL", "ORIGIN");
+Query origin;
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -19,7 +19,13 @@ void setup () {
   tableScreen.addWidget(gTable);
   
   barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  barScreen.addWidget(new BarChart(10,10,500,250, "x", "y", new int[]{5,10,15,3,7}, new String[]{"a","b","c","d","e"}));
+  //barScreen.addWidget(new Input(10, 400, 300, 30));
+  //barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
+  origin = new Query(table, "JFK", "FLL", "ORIGIN");
+  barScreen.addWidget(new BarChart(10,10,500,250, "Airport", "Flights", new int[]{origin.getFlight("SEA"), origin.getFlight("FLL"), origin.getFlight("DCA")}, new String[]{"SEA", "FLL", "DCA"}));
+  
+  PFont font = loadFont("AgencyFB-Bold-20.vlw");
+  textFont(font);
   
   activeScreen = tableScreen;
 }
@@ -27,8 +33,6 @@ void setup () {
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
-   first.chart();
-
 }
 
 void keyPressed() {
@@ -45,6 +49,9 @@ void keyPressed() {
       activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
     } else if(key == 'm'){
       activeScreen = barScreen;
+    }
+    else if(key == 'n'){
+      activeScreen = tableScreen;
     }
   }
   else{

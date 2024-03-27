@@ -84,7 +84,6 @@ class Input extends Widget {
       } else {
         selected = false;
         selectedWidget = null;
-
       }
     } else {
       if (selected) {
@@ -115,9 +114,9 @@ class Input extends Widget {
   }
 
 
-  int lastEl(){
-    for(int i = inputString.length()-1;i>0;i--){
-      if(textWidth(inputString.substring(i))>width){
+  int lastEl() {
+    for (int i = inputString.length()-1; i>0; i--) {
+      if (textWidth(inputString.substring(i))>width) {
         return i+1;
       }
     }
@@ -158,7 +157,7 @@ class BarChart extends Widget {
     for (int i =0; i<bars.length; i++) {
       bars[i].draw(screenX+x+20+i*(colSpace+colWidth), screenY+y, screenX+x);
     }
-    text(xAxis, screenX+x-10, screenY+y);
+    text(xAxis, screenX+x-textWidth(xAxis)/2, screenY+y);
     text(yAxis, screenX+width, screenY+y+height+15);
   }
 }
@@ -182,8 +181,27 @@ class Bar {
   void draw(int x, int y, int chartStart) {
     fill(c);
     rect(x, y+(chartHeight-height), width, height);
-    text(name, x, y+chartHeight+15);
-    text(value, chartStart-15, y+(chartHeight-height));
+    text(name, x, y+chartHeight+20);
+    text(value, chartStart-textWidth(String.valueOf(value))-1, y+(chartHeight-height));
+  }
+}
+
+class Button extends Widget {
+  String text;
+  int width, height;
+
+  Button(int x, int y, int width, int height, String text) {
+    super(x, y);
+    this.width = width;
+    this.height = height;
+    this.text = text;
+  }
+
+  void draw(int screenX, int screenY) {
+    fill(255);
+    rect(screenX+x, screenY+y, width, height);
+    fill(0);
+    text(text, screenX+x, screenY+y+height/2);
   }
 }
 
