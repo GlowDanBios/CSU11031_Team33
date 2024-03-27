@@ -22,16 +22,22 @@ class TableView extends Widget {
   TableView(Table table, int x, int y) {
     super(x, y);
     this.table = table;
-    displayedTable = table;
+    displayedTable = cleanData(table);
     setColumnWidths();
     clickable = false;
   }
 
   void setColumnWidths() {
-    columnStarts = new int[displayedTable.getColumnCount()];
+    columnStarts = new int[displayedTable.getColumnCount()+1];
     int previousWidth = 0;
-    for (int i = 0; i <displayedTable.getColumnCount(); i++) {
-      int width = (int)textWidth(displayedTable.getColumnTitle(i));
+    for (int i = 0; i <displayedTable.getColumnCount()+1; i++) {
+      int width;
+      if(i<displayedTable.getColumnCount())
+        width = (int)textWidth(displayedTable.getColumnTitle(i));
+      else{
+        columnStarts[i] = columnStarts[i-1]+previousWidth;
+        return;
+      }
       String[] col = displayedTable.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
         if ((int)textWidth(col[j])>width) width = (int)textWidth(col[j]);
@@ -48,12 +54,83 @@ class TableView extends Widget {
   void draw(int screenX, int screenY) {
     fill(TEXT_COLOR);
     for (int i = 0; i <displayedTable.getColumnCount(); i++) {
-      text(displayedTable.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
+      if (i!=15 && i!=16)
+        text(displayedTable.getColumnTitle(i), screenX+x+columnStarts[i], screenY+y);
       String[] col = displayedTable.getStringColumn(i);
       for (int j = 0; j<col.length; j++) {
+        if (i == 1) {
+          if (isCancelled(col[j])) {
+            fill(200, 0, 0, 100);
+            rect(screenX+x, screenY+y+20+j*20, columnStarts[columnStarts.length-1], 20);
+            fill(TEXT_COLOR);
+          } else if (isDiverted(col[j])) {
+            fill(200, 200, 0, 100);
+            rect(screenX+x, screenY+y+20+j*20, screenX+x+WINDOW_WIDTH, 20);
+            fill(TEXT_COLOR);
+          }
+        }
+
         text(col[j], screenX+x+columnStarts[i], screenY+y+20+j*20);
       }
     }
+  }
+
+
+  Table cleanData(Table originalTable) {
+    Table returnTable = new Table();
+    returnTable.addColumn("FL_DATE");
+    returnTable.addColumn("MKT_CARRIER");
+    returnTable.addColumn("ORIGIN");
+    returnTable.addColumn("ORIGIN_CITY_NAME");
+    returnTable.addColumn("ORIGIN_STATE_ABR");
+    returnTable.addColumn("ORIGIN_WAC");
+    returnTable.addColumn("DEST");
+    returnTable.addColumn("DEST_CITY_NAME");
+    returnTable.addColumn("DEST_STATE_ABR");
+    returnTable.addColumn("DEST_WAC");
+    returnTable.addColumn("CRS_DEP_TIME");
+    returnTable.addColumn("DEP_TIME");
+    returnTable.addColumn("CRS_ARR_TIME");
+    returnTable.addColumn("ARR_TIME");
+    returnTable.addColumn("DISTANCE");
+    for (int i = 0; i<originalTable.getRowCount(); i++) {
+      TableRow row = originalTable.getRow(i);
+      TableRow newRow = returnTable.addRow();
+      newRow.setString("FL_DATE", row.getString("FL_DATE").substring(0, 11));
+      newRow.setString("MKT_CARRIER", row.getString("MKT_CARRIER")+row.getString("MKT_CARRIER_FL_NUM"));
+      newRow.setString("ORIGIN", row.getString("ORIGIN"));
+      newRow.setString("ORIGIN_CITY_NAME", row.getString("ORIGIN_CITY_NAME"));
+      newRow.setString("ORIGIN_STATE_ABR", row.getString("ORIGIN_STATE_ABR"));
+      newRow.setString("ORIGIN_WAC", row.getString("ORIGIN_WAC"));
+      newRow.setString("DEST", row.getString("DEST"));
+      newRow.setString("DEST_CITY_NAME", row.getString("DEST_CITY_NAME"));
+      newRow.setString("DEST_STATE_ABR", row.getString("DEST_STATE_ABR"));
+      newRow.setString("DEST_WAC", row.getString("DEST_WAC"));
+      newRow.setString("CRS_DEP_TIME", row.getString("CRS_DEP_TIME"));
+      newRow.setString("DEP_TIME", row.getString("DEP_TIME"));
+      newRow.setString("CRS_ARR_TIME", row.getString("CRS_ARR_TIME"));
+      newRow.setString("ARR_TIME", row.getString("ARR_TIME"));
+      newRow.setString("DISTANCE", row.getString("DISTANCE"));
+    }
+    return returnTable;
+  }
+
+  boolean isCancelled(String carr) {
+    String carrier = carr.substring(0, 2);
+    String flNum = carr.substring(2);
+
+    for (TableRow row : table.findRows(carrier, "MKT_CARRIER")) {
+      if (row.getString("MKT_CARRIER_FL_NUM").equals(flNum)) return row.getString("CANCELLED").equals("1");
+    }
+    return false;
+  }
+  boolean isDiverted(String carr) {
+    String carrier = carr.substring(0, 2);
+    String flNum = carr.substring(2);
+    for (TableRow row : table.findRows(carrier, "MKT_CARRIER")) {
+      if (row.getString("MKT_CARRIER_FL_NUM").equals(flNum)) return row.getString("DIVERTED").equals("1");
+    }
+    return false;
   }
 }
 
