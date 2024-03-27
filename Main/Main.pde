@@ -18,6 +18,10 @@ void setup () {
   //tableScreen.addWidget(new Input(10, 0, 300, 30));
   //searchButton = new Button(350, 0, 50, 30, "Search");
   //tableScreen.addWidget(searchButton);
+  //departureInput = new Input(10, 0, 100, 30);
+  //tableScreen.addWidget(departureInput);
+  //returnInput = new Input(120, 0, 100, 30);
+  //tableScreen.addWidget(returnInput);
   
   gTable = new TableView(table, 0, 50);
   tableScreen.addWidget(gTable);
@@ -32,11 +36,15 @@ void setup () {
   textFont(font);
   
   activeScreen = tableScreen;
+  //ButtonClick observer = new ButtonClick(); 
+  //searchButton.addObserver(observer); 
 }
 
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
+ // departureInput.draw(activeScreen.getX(), activeScreen.getY());
+ // returnInput.draw(activeScreen.getX(), activeScreen.getY());
 }
 
 void keyPressed() {
