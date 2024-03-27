@@ -87,8 +87,24 @@ class TableView extends Widget {
             fill(TEXT_COLOR);
           }
         }
-
-        text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
+        if (i<10 || i>13) {
+          text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
+        } else {
+          String a = ""+col[j];
+          if(a.length()==1){
+            a = "00:0"+a;
+          }
+          else if(a.length()==2){
+            a = "00:"+a;
+          }
+          else if(a.length() == 3){
+            a = "0"+a.substring(0,1)+":"+a.substring(1);
+          }
+          else{
+            a = a.substring(0,2)+":"+a.substring(2);
+          }
+          text(a, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
+        }
       }
     }
   }
@@ -106,10 +122,10 @@ class TableView extends Widget {
     returnTable.addColumn("DEST_CITY_NAME");
     returnTable.addColumn("DEST_STATE_ABR");
     returnTable.addColumn("DEST_WAC", Table.INT);
-    returnTable.addColumn("CRS_DEP_TIME");
-    returnTable.addColumn("DEP_TIME");
-    returnTable.addColumn("CRS_ARR_TIME");
-    returnTable.addColumn("ARR_TIME");
+    returnTable.addColumn("CRS_DEP_TIME", Table.INT);
+    returnTable.addColumn("DEP_TIME",Table.INT);
+    returnTable.addColumn("CRS_ARR_TIME", Table.INT);
+    returnTable.addColumn("ARR_TIME", Table.INT);
     returnTable.addColumn("DISTANCE", Table.INT);
     for (int i = 0; i<originalTable.getRowCount(); i++) {
       TableRow row = originalTable.getRow(i);
@@ -124,10 +140,10 @@ class TableView extends Widget {
       newRow.setString("DEST_CITY_NAME", row.getString("DEST_CITY_NAME"));
       newRow.setString("DEST_STATE_ABR", row.getString("DEST_STATE_ABR"));
       newRow.setInt("DEST_WAC", Integer.parseInt(row.getString("DEST_WAC")));
-      newRow.setString("CRS_DEP_TIME", row.getString("CRS_DEP_TIME"));
-      newRow.setString("DEP_TIME", row.getString("DEP_TIME"));
-      newRow.setString("CRS_ARR_TIME", row.getString("CRS_ARR_TIME"));
-      newRow.setString("ARR_TIME", row.getString("ARR_TIME"));
+      newRow.setInt("CRS_DEP_TIME", Integer.parseInt(row.getString("CRS_DEP_TIME")));
+      newRow.setInt("DEP_TIME", row.getString("DEP_TIME").length()>0?Integer.parseInt(row.getString("DEP_TIME")):0);
+      newRow.setInt("CRS_ARR_TIME", Integer.parseInt(row.getString("CRS_ARR_TIME")));
+      newRow.setInt("ARR_TIME", row.getString("ARR_TIME").length()>0?Integer.parseInt(row.getString("ARR_TIME")):0);
       newRow.setInt("DISTANCE", Integer.parseInt(row.getString("DISTANCE")));
     }
     return returnTable;
