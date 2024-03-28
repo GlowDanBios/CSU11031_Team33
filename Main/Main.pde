@@ -18,8 +18,8 @@ void setup () {
   table = loadTable("Files/flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  search = new Input(250, 0, 200, 30, "Column name");
-  searchField = new Input(10, 0, 200, 30, "Search value");
+  search = new Input(250, 0, 200, 30, "Search value");
+  searchField = new Input(10, 0, 200, 30, "Column name");
   tableScreen.addWidget(search);
   tableScreen.addWidget(searchField);
   searchButton = new Button(460, 0, 50, 30, "Search");
