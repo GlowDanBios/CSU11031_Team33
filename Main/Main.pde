@@ -5,6 +5,8 @@ Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
 Button searchButton;
+Input search;
+Input searchField;
 Query origin;
 
 void settings() {
@@ -15,7 +17,10 @@ void setup () {
   table = loadTable("Files/flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  //tableScreen.addWidget(new Input(10, 0, 300, 30));
+  search = new Input(350, 0, 300, 30);
+  searchField = new Input(10, 0, 300, 30);
+  tableScreen.addWidget(search);
+  tableScreen.addWidget(searchField);
   //searchButton = new Button(350, 0, 50, 30, "Search");
   //tableScreen.addWidget(searchButton);
   //departureInput = new Input(10, 0, 100, 30);
@@ -65,10 +70,12 @@ void keyPressed() {
     else if(key == 'n'){
       activeScreen = tableScreen;
     }
+    else if(key == 'k'){
+      gTable.filter(searchField.getInput(), search.getInput());
+    }
   }
   else{
-    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
-    
+    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);    
   }
 }
 

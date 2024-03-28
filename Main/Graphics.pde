@@ -91,17 +91,14 @@ class TableView extends Widget {
           text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
         } else {
           String a = ""+col[j];
-          if(a.length()==1){
+          if (a.length()==1) {
             a = "00:0"+a;
-          }
-          else if(a.length()==2){
+          } else if (a.length()==2) {
             a = "00:"+a;
-          }
-          else if(a.length() == 3){
-            a = "0"+a.substring(0,1)+":"+a.substring(1);
-          }
-          else{
-            a = a.substring(0,2)+":"+a.substring(2);
+          } else if (a.length() == 3) {
+            a = "0"+a.substring(0, 1)+":"+a.substring(1);
+          } else {
+            a = a.substring(0, 2)+":"+a.substring(2);
           }
           text(a, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
         }
@@ -123,7 +120,7 @@ class TableView extends Widget {
     returnTable.addColumn("DEST_STATE_ABR");
     returnTable.addColumn("DEST_WAC", Table.INT);
     returnTable.addColumn("CRS_DEP_TIME", Table.INT);
-    returnTable.addColumn("DEP_TIME",Table.INT);
+    returnTable.addColumn("DEP_TIME", Table.INT);
     returnTable.addColumn("CRS_ARR_TIME", Table.INT);
     returnTable.addColumn("ARR_TIME", Table.INT);
     returnTable.addColumn("DISTANCE", Table.INT);
@@ -185,6 +182,14 @@ class TableView extends Widget {
       sortedBy = col;
     }
   }
+
+  void filter(String column, String query) {
+    displayedTable = new Table(displayedTable.findRows(query, column));
+  }
+
+  void clear() {
+    displayedTable = cleanData(table);
+  }
 }
 
 class Input extends Widget {
@@ -210,12 +215,17 @@ class Input extends Widget {
   void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
     if (click) {
       if (clicked(screenX, screenY, mouseX, mouseY)) {
-        selected = true;
-        selectedWidget = this;
-        blink = 0;
+        if (!selected) {
+          selected = true;
+          selectedWidget = this;
+          blink = 0;
+        }
+        else{
+          selectedWidget = null;
+        }
       } else {
+        if(selectedWidget == this) selectedWidget = null;
         selected = false;
-        selectedWidget = null;
       }
     } else {
       if (selected) {
