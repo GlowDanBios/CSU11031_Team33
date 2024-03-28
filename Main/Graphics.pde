@@ -184,7 +184,15 @@ class TableView extends Widget {
   }
 
   void filter(String column, String query) {
-    displayedTable = new Table(displayedTable.findRows(query, column));
+    boolean flag = false;
+    for(String col:displayedTable.getColumnTitles()){
+      if(column.toUpperCase().equals(col)){
+        flag = true;
+        break;
+      }
+    }
+    if(!flag) return;
+    displayedTable = new Table(displayedTable.findRows(query.toUpperCase(), column.toUpperCase()));
   }
 
   void clear() {
@@ -194,22 +202,28 @@ class TableView extends Widget {
 
 class Input extends Widget {
   String inputString;
+  String title;
   int width, height;
   int cursorLocation;
   boolean selected;
 
   int blink;
 
-  Input(int x, int y, int width, int height) {
+  Input(int x, int y, int width, int height, String title) {
     super(x, y);
     this.width = width;
     this.height = height;
     inputString = "";
     clickable = true;
+    this.title = title;
   }
 
   boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
     return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
+  }
+  
+  void clear(){
+    inputString = "";
   }
 
   void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
@@ -245,7 +259,12 @@ class Input extends Widget {
 
     rect(screenX+x, screenY+y, width, height);
     fill(0);
-    text(inputString.substring(textWidth(inputString)>width?lastEl():0), screenX+x+2, screenY+y+height/2+2);
+    if(inputString.length()>0)
+      text(inputString.substring(textWidth(inputString)>width?lastEl():0), screenX+x+2, screenY+y+height/2+2);
+    else{
+      fill(TITLE_COLOR);
+      text(title, screenX+x+2, screenY+y+height/2+2);
+    }
     if (selected) {
       fill(0);
       if (blink<BLINK_INTERVAL) line(screenX+x+(textWidth(inputString)>width?width-1:textWidth(inputString)+1), screenY+y+5, screenX+x+(textWidth(inputString)>width?width-1:textWidth(inputString)+1), screenY+y+height-5);
@@ -390,6 +409,24 @@ class SortClick implements ButtonObserver {
   }
   void buttonClicked(Button button) {
     table.sort(button.text);
+  }
+}
+
+class SearchFilter implements ButtonObserver{
+  TableView table;
+  
+  SearchFilter(TableView table){
+    this.table = table;
+  }
+  void buttonClicked(Button button){
+    if(button.text.equals("Search")){
+      table.filter(searchField.getInput(), search.getInput());
+    }
+    else if(button.text.equals("Clear")){
+      table.clear();
+      searchField.clear();
+      search.clear();
+    }
   }
 }
 

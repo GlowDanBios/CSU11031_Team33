@@ -2,6 +2,7 @@ final int WINDOW_WIDTH = 1200;
 final int WINDOW_HEIGHT = 800;
 final color BACKGROUND_COLOR = color(255);
 final color TEXT_COLOR = color(0);
+final color TITLE_COLOR = color(10,10,10,150);
 final int CHARACTER_WIDTH = 4;
 final int SCROLL_SPEED = 10;
 final int TABLE_TOP_BORDER = 20;

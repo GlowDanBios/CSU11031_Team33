@@ -5,6 +5,7 @@ Screen barScreen;
 Screen activeScreen;
 Widget selectedWidget;
 Button searchButton;
+Button clearButton;
 Input search;
 Input searchField;
 Query origin;
@@ -17,41 +18,48 @@ void setup () {
   table = loadTable("Files/flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  search = new Input(350, 0, 300, 30);
-  searchField = new Input(10, 0, 300, 30);
+  search = new Input(250, 0, 200, 30, "Column name");
+  searchField = new Input(10, 0, 200, 30, "Search value");
   tableScreen.addWidget(search);
   tableScreen.addWidget(searchField);
-  //searchButton = new Button(350, 0, 50, 30, "Search");
-  //tableScreen.addWidget(searchButton);
+  searchButton = new Button(460, 0, 50, 30, "Search");
+  searchButton.setColor(color(255));
+  tableScreen.addWidget(searchButton);
+  clearButton = new Button(520, 0, 50, 30, "Clear");
+  clearButton.setColor(color(255));
+  tableScreen.addWidget(clearButton);
   //departureInput = new Input(10, 0, 100, 30);
   //tableScreen.addWidget(departureInput);
   //returnInput = new Input(120, 0, 100, 30);
   //tableScreen.addWidget(returnInput);
-  
+
   gTable = new TableView(table, 0, 50);
   tableScreen.addWidget(gTable);
-  
+  searchButton.addObserver(new SearchFilter(gTable));
+  clearButton.addObserver(new SearchFilter(gTable));
+
+
   barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   //barScreen.addWidget(new Input(10, 400, 300, 30));
   //barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
   origin = new Query(table, "JFK", "FLL", "ORIGIN");
-  barScreen.addWidget(new BarChart(10,10,500,250, "Airport", "Flights", new int[]{origin.getFlight("SEA"), origin.getFlight("FLL"), origin.getFlight("DCA")}, new String[]{"SEA", "FLL", "DCA"}));
-  
+  barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", new int[]{origin.getFlight("SEA"), origin.getFlight("FLL"), origin.getFlight("DCA")}, new String[]{"SEA", "FLL", "DCA"}));
+
   PFont font = loadFont("AgencyFB-Bold-20.vlw");
   textFont(font);
-  
+
   activeScreen = tableScreen;
-  //ButtonClick observer = new ButtonClick(); 
-  //searchButton.addObserver(observer); 
+  //ButtonClick observer = new ButtonClick();
+  //searchButton.addObserver(observer);
 }
 
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
- // departureInput.draw(activeScreen.getX(), activeScreen.getY());
- // returnInput.draw(activeScreen.getX(), activeScreen.getY());
+  // departureInput.draw(activeScreen.getX(), activeScreen.getY());
+  // returnInput.draw(activeScreen.getX(), activeScreen.getY());
 }
-  
+
 void keyPressed() {
   if (selectedWidget == null) {
     if (key == 'w') {
@@ -64,18 +72,15 @@ void keyPressed() {
         activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY());
     } else if (key == 'd') {
       activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
-    } else if(key == 'm'){
+    } else if (key == 'm') {
       activeScreen = barScreen;
-    }
-    else if(key == 'n'){
+    } else if (key == 'n') {
       activeScreen = tableScreen;
-    }
-    else if(key == 'k'){
+    } else if (key == 'k') {
       gTable.filter(searchField.getInput(), search.getInput());
     }
-  }
-  else{
-    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);    
+  } else {
+    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
   }
 }
 
@@ -88,13 +93,13 @@ void mousePressed() {
   }
 }
 // written by James McNamee
-//ArrayList<DataPoint> queryDateRange(ArrayList<DataPoint> dataSet, Date startDate, Date endDate) 
+//ArrayList<DataPoint> queryDateRange(ArrayList<DataPoint> dataSet, Date startDate, Date endDate)
 //{
 //    ArrayList<DataPoint> results = new ArrayList<>();
-//    for (DataPoint dataPoint : dataSet) 
+//    for (DataPoint dataPoint : dataSet)
 //   {
 //        Date flightDate = dataPoint.getDate();
-//        if (flightDate.after(startDate) && flightDate.before(endDate)) 
+//        if (flightDate.after(startDate) && flightDate.before(endDate))
 //        {
 //            results.add(dataPoint);
 //        }
