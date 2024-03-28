@@ -30,7 +30,7 @@ class TableView extends Widget {
     clickable = false;
     columnNames = new Button[displayedTable.getColumnCount()];
     for (int i = 0; i<displayedTable.getColumnCount(); i++) {
-      columnNames[i] = new Button(x+columnStarts[i], y-ROW_HEIGHT, columnStarts[i+1]-columnStarts[i]-10, ROW_HEIGHT, displayedTable.getColumnTitle(i));
+      columnNames[i] = new Button(x+columnStarts[i], y-ROW_HEIGHT, columnStarts[i+1]-columnStarts[i], ROW_HEIGHT, displayedTable.getColumnTitle(i));
       SortClick obs = new SortClick(this);
       tableScreen.addWidget(columnNames[i]);
       columnNames[i].addObserver(obs);
@@ -62,8 +62,9 @@ class TableView extends Widget {
   }
 
   void draw(int screenX, int screenY) {
-    fill(TEXT_COLOR);
     for (int i = 0; i <displayedTable.getColumnCount(); i++) {
+      fill(TEXT_COLOR);
+      line(screenX+x+columnStarts[i], screenY+y, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT*displayedTable.getRowCount());
       if (sortedBy!=null && sortedBy.equals(columnNames[i].text)) {
         if (sortReverse) {
           columnNames[i].setColor(color(200, 0, 0, 100));
@@ -87,6 +88,7 @@ class TableView extends Widget {
             fill(TEXT_COLOR);
           }
         }
+        line(screenX+x, screenY+y+j*ROW_HEIGHT, screenX+x+columnStarts[columnStarts.length-1], screenY+y+j*ROW_HEIGHT);
         if (i<10 || i>13) {
           text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
         } else {
@@ -185,13 +187,13 @@ class TableView extends Widget {
 
   void filter(String column, String query) {
     boolean flag = false;
-    for(String col:displayedTable.getColumnTitles()){
-      if(column.toUpperCase().equals(col)){
+    for (String col : displayedTable.getColumnTitles()) {
+      if (column.toUpperCase().equals(col)) {
         flag = true;
         break;
       }
     }
-    if(!flag) return;
+    if (!flag) return;
     displayedTable = new Table(displayedTable.findRows(query.toUpperCase(), column.toUpperCase()));
   }
 
@@ -221,8 +223,8 @@ class Input extends Widget {
   boolean clicked(int screenX, int screenY, int mouseX, int mouseY) {
     return mouseX>screenX+x && mouseX<screenX+x+width && mouseY>screenY+y && mouseY<screenY+y+height;
   }
-  
-  void clear(){
+
+  void clear() {
     inputString = "";
   }
 
@@ -259,9 +261,9 @@ class Input extends Widget {
 
     rect(screenX+x, screenY+y, width, height);
     fill(0);
-    if(inputString.length()>0)
+    if (inputString.length()>0)
       text(inputString.substring(textWidth(inputString)>width?lastEl():0), screenX+x+2, screenY+y+height/2+2);
-    else{
+    else {
       fill(TITLE_COLOR);
       text(title, screenX+x+2, screenY+y+height/2+2);
     }
@@ -412,17 +414,16 @@ class SortClick implements ButtonObserver {
   }
 }
 
-class SearchFilter implements ButtonObserver{
+class SearchFilter implements ButtonObserver {
   TableView table;
-  
-  SearchFilter(TableView table){
+
+  SearchFilter(TableView table) {
     this.table = table;
   }
-  void buttonClicked(Button button){
-    if(button.text.equals("Search")){
+  void buttonClicked(Button button) {
+    if (button.text.equals("Search")) {
       table.filter(searchField.getInput(), search.getInput());
-    }
-    else if(button.text.equals("Clear")){
+    } else if (button.text.equals("Clear")) {
       table.clear();
       searchField.clear();
       search.clear();
