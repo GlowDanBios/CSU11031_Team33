@@ -42,23 +42,15 @@ void setup () {
   barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   //barScreen.addWidget(new Input(10, 400, 300, 30));
   //barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
-  origin = new Query(table, "JFK", "FLL", "ORIGIN");
+  origin = new Query(table, "JFK", "FLL", "ORIGIN");  
+  barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", new int[]{origin.getFlight("SEA"), origin.getFlight("FLL"), origin.getFlight("DCA")}, new String[]{"SEA", "FLL", "DCA"}));
 
-  barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
-  String[] entryArray = {"WN", "B6", "AS"};
-  String independentVariable = "MKT_CARRIER";
-  int[][] unreliability = {origin.unreliable(entryArray, "DEP_TIME", independentVariable), origin.unreliable(entryArray, "CANCELLED", independentVariable),
-    origin.unreliable(entryArray, "DIVERTED", independentVariable)};
-
-  barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
-  origin.frequencyDays(1, 10);
-  origin.getFlight("AS");
   PFont font = loadFont("AgencyFB-Bold-20.vlw");
   textFont(font);
 
   activeScreen = tableScreen;
-
+  //ButtonClick observer = new ButtonClick();
+  //searchButton.addObserver(observer);
 }
 
 void draw() {
