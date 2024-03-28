@@ -219,12 +219,11 @@ class Input extends Widget {
           selected = true;
           selectedWidget = this;
           blink = 0;
-        }
-        else{
+        } else {
           selectedWidget = null;
         }
       } else {
-        if(selectedWidget == this) selectedWidget = null;
+        if (selectedWidget == this) selectedWidget = null;
         selected = false;
       }
     } else {

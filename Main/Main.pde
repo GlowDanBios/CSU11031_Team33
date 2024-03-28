@@ -51,7 +51,7 @@ void draw() {
  // departureInput.draw(activeScreen.getX(), activeScreen.getY());
  // returnInput.draw(activeScreen.getX(), activeScreen.getY());
 }
-
+  
 void keyPressed() {
   if (selectedWidget == null) {
     if (key == 'w') {
