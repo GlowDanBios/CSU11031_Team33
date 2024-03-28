@@ -198,6 +198,7 @@ class TableView extends Widget {
   }
 
   void clear() {
+    sortedBy = null;
     displayedTable = cleanData(table);
   }
 }
