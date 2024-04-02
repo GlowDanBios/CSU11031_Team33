@@ -33,7 +33,7 @@ void setup () {
   //returnInput = new Input(120, 0, 100, 30);
   //tableScreen.addWidget(returnInput);
 
-  gTable = new TableView(table, 0, 70);
+  gTable = new TableView(table, 0, 100);
   tableScreen.addWidget(gTable);
   searchButton.addObserver(new SearchFilter(gTable));
   clearButton.addObserver(new SearchFilter(gTable));

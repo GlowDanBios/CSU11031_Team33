@@ -62,6 +62,7 @@ class TableView extends Widget {
   }
 
   void draw(int screenX, int screenY) {
+    text("Displayed flights: "+displayedTable.getRowCount(), screenX+x, screenY+y-ROW_HEIGHT*1.5);
     for (int i = 0; i <displayedTable.getColumnCount(); i++) {
       fill(TEXT_COLOR);
       line(screenX+x+columnStarts[i], screenY+y, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT*displayedTable.getRowCount());
