@@ -11,3 +11,5 @@ final int BLINK_INTERVAL = 30;
 final int COLUMN_SPACE = 45;
 final int ROW_HEIGHT = 20;
 final String MAIN_FILE_NAME = "flights2k.csv";
+final String BIG_FONT = "AgencyFB-Bold-20.vlw";
+final String SMALL_FONT = "AgencyFB-Bold-10.vlw";

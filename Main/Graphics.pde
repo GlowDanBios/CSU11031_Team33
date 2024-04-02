@@ -343,10 +343,12 @@ class Bar {
   }
 
   void draw(int x, int y, int chartStart) {
+    textFont(smallFont);
     fill(c);
     rect(x, y+(chartHeight-height), width, height);
     text(name, x, y+chartHeight+20);
     text(value, chartStart-textWidth(String.valueOf(value))-1, y+(chartHeight-height));
+    textFont(bigFont);
   }
 }
 
@@ -429,6 +431,32 @@ class SearchFilter implements ButtonObserver {
       table.clear();
       searchField.clear();
       search.clear();
+    }
+  }
+}
+
+class QueryShow implements ButtonObserver{
+  TableView table;
+  Screen oldScreen;
+  
+  QueryShow(TableView table){
+    this.table = table;
+  }
+  
+  void buttonClicked(Button button){
+    oldScreen = activeScreen;
+    if(button.text.equals("Display unreliable flights")){
+      Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+      ArrayList<String> airports = new ArrayList<String>();
+      String[] originCol = table.displayedTable.getStringColumn("ORIGIN");
+      for(String s:originCol){
+        if(!airports.contains(s)) airports.add(s);
+      }
+      BarChart barChart;
+      if(airports.size()>20) barChart = new BarChart(10,10,2000,700,"Airpot", "Number of flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN") ,airports.toArray(new String[airports.size()]));
+      else barChart = new BarChart(10,10,1000,350,"Airpot", "Number of flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN") ,airports.toArray(new String[airports.size()]));
+      newScreen.addWidget(barChart);
+      activeScreen = newScreen;
     }
   }
 }

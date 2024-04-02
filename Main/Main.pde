@@ -6,9 +6,12 @@ Screen activeScreen;
 Widget selectedWidget;
 Button searchButton;
 Button clearButton;
+Button unreliableButton;
 Input search;
 Input searchField;
 Query origin;
+PFont bigFont;
+PFont smallFont;
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -28,6 +31,9 @@ void setup () {
   clearButton = new Button(520, 0, 50, 30, "Clear");
   clearButton.setColor(color(255));
   tableScreen.addWidget(clearButton);
+  unreliableButton = new Button(600, 0, 160, 30, "Display unreliable flights");
+  unreliableButton.setColor(color(255));
+  tableScreen.addWidget(unreliableButton);
   //departureInput = new Input(10, 0, 100, 30);
   //tableScreen.addWidget(departureInput);
   //returnInput = new Input(120, 0, 100, 30);
@@ -37,25 +43,27 @@ void setup () {
   tableScreen.addWidget(gTable);
   searchButton.addObserver(new SearchFilter(gTable));
   clearButton.addObserver(new SearchFilter(gTable));
+  unreliableButton.addObserver(new QueryShow(gTable));
 
 
-  barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  //barScreen.addWidget(new Input(10, 400, 300, 30));
-  //barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
-  origin = new Query(table, "JFK", "FLL", "ORIGIN");
+  //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  ////barScreen.addWidget(new Input(10, 400, 300, 30));
+  ////barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
+  //origin = new Query(table, "JFK", "FLL", "ORIGIN");
 
-  barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
-  String[] entryArray = {"WN", "B6", "AS"};
-  String independentVariable = "MKT_CARRIER";
-  int[][] unreliability = {origin.unreliable(entryArray, "DEP_TIME", independentVariable), origin.unreliable(entryArray, "CANCELLED", independentVariable),
-    origin.unreliable(entryArray, "DIVERTED", independentVariable)};
+  //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  //origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
+  //String[] entryArray = {"WN", "B6", "AS"};
+  //String independentVariable = "MKT_CARRIER";
+  //int[][] unreliability = {origin.unreliable(entryArray, "DEP_TIME", independentVariable), origin.unreliable(entryArray, "CANCELLED", independentVariable),
+  //  origin.unreliable(entryArray, "DIVERTED", independentVariable)};
 
-  barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
-  origin.frequencyDays(1, 10);
-  origin.getFlight("AS");
-  PFont font = loadFont("AgencyFB-Bold-20.vlw");
-  textFont(font);
+  //barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
+  //origin.frequencyDays(1, 10);
+  //origin.getFlight("AS");
+  bigFont = loadFont(BIG_FONT);
+  smallFont = loadFont(SMALL_FONT);
+  textFont(bigFont);
 
   activeScreen = tableScreen;
 
