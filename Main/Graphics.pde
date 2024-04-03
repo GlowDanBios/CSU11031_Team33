@@ -145,7 +145,7 @@ class TableView extends Widget {
       newRow.setInt("DEP_TIME", row.getString("DEP_TIME").length()>0?Integer.parseInt(row.getString("DEP_TIME")):0);
       newRow.setInt("CRS_ARR_TIME", Integer.parseInt(row.getString("CRS_ARR_TIME")));
       newRow.setInt("ARR_TIME", row.getString("ARR_TIME").length()>0?Integer.parseInt(row.getString("ARR_TIME")):0);
-      newRow.setInt("DISTANCE", Integer.parseInt(row.getString("DISTANCE")));
+      newRow.setInt("DISTANCE", (int)Float.parseFloat(row.getString("DISTANCE")));
     }
     return returnTable;
   }

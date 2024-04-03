@@ -26,8 +26,9 @@ void settings() {
 }
 
 void setup () {
-  table = loadTable("Files/flights2k.csv", "header");
-
+  println("Start");
+  table = loadTable("Files/"+MAIN_FILE_NAME, "header");
+  println("Download done");
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   searchField = new Input(110, 0, 200, 30, "Column name");
   search = new Input(320, 0, 200, 30, "Search value");
