@@ -7,9 +7,16 @@ Widget selectedWidget;
 Button searchButton;
 Button clearButton;
 Button unreliableButton;
+Button weekDaysButton;
 Input search;
 Input searchField;
+Input startDateInput;
+Input endDateInput;
+DateVerify startDateVerify;
+DateVerify endDateVerify;
 Query origin;
+Text filterText;
+Text weekdaysText;
 PFont bigFont;
 PFont mediumFont;
 PFont smallFont;
@@ -22,19 +29,35 @@ void setup () {
   table = loadTable("Files/flights2k.csv", "header");
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  search = new Input(250, 0, 200, 30, "Search value");
-  searchField = new Input(10, 0, 200, 30, "Column name");
+  searchField = new Input(110, 0, 200, 30, "Column name");
+  search = new Input(320, 0, 200, 30, "Search value");
   tableScreen.addWidget(search);
   tableScreen.addWidget(searchField);
-  searchButton = new Button(460, 0, 50, 30, "Search");
+  searchButton = new Button(560, 0, 50, 30, "Search");
   searchButton.setColor(color(255));
   tableScreen.addWidget(searchButton);
-  clearButton = new Button(520, 0, 50, 30, "Clear");
+  clearButton = new Button(620, 0, 50, 30, "Clear");
   clearButton.setColor(color(255));
   tableScreen.addWidget(clearButton);
-  unreliableButton = new Button(600, 0, 160, 30, "Display cancelled flights");
+  unreliableButton = new Button(700, 0, 160, 30, "Display cancelled flights");
   unreliableButton.setColor(color(255));
   tableScreen.addWidget(unreliableButton);
+  startDateInput = new Input(1000, 0, 200, 30, "Start date");
+  tableScreen.addWidget(startDateInput);
+  startDateVerify = new DateVerify(startDateInput, "Correct", "Wrong date format");
+  tableScreen.addWidget(startDateVerify);
+  endDateInput = new Input(1220, 0, 200, 30, "End date");
+  tableScreen.addWidget(endDateInput);
+  endDateVerify = new DateVerify(endDateInput, "Correct", "Wrong date format");
+  tableScreen.addWidget(endDateVerify);
+  weekDaysButton = new Button(1450, 0, 200, 30, "Display flights by days of the week");
+  weekDaysButton.setColor(color(255));
+  tableScreen.addWidget(weekDaysButton);
+  filterText = new Text(10, 20, "Filter entries: ");
+  tableScreen.addWidget(filterText);
+  weekdaysText = new Text(890, 20, "Enter date range: ");
+  tableScreen.addWidget(weekdaysText);
+
   //departureInput = new Input(10, 0, 100, 30);
   //tableScreen.addWidget(departureInput);
   //returnInput = new Input(120, 0, 100, 30);
@@ -45,6 +68,7 @@ void setup () {
   searchButton.addObserver(new SearchFilter(gTable));
   clearButton.addObserver(new SearchFilter(gTable));
   unreliableButton.addObserver(new QueryShow(gTable));
+  weekDaysButton.addObserver(new QueryShow(gTable));
 
 
   //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
@@ -68,7 +92,6 @@ void setup () {
   textFont(bigFont);
 
   activeScreen = tableScreen;
-
 }
 
 void draw() {

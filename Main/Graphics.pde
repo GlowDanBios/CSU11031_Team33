@@ -294,6 +294,32 @@ class Input extends Widget {
   }
 }
 
+class DateVerify extends Widget {
+  Input input;
+  String textIfCorrect, textIfWrong;
+
+  DateVerify(Input input, String textIfCorrect, String textIfWrong) {
+    super(input.x, input.y+input.height+20);
+    this.input = input;
+    this.textIfCorrect = textIfCorrect;
+    this.textIfWrong = textIfWrong;
+  }
+
+  void draw(int screenX, int screenY) {
+    if (input.getInput().matches("^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$")) {
+      fill(0, 200, 0);
+      text(textIfCorrect, screenX+x, screenY+y);
+    } else {
+      fill(200, 0, 0);
+      text(textIfWrong, screenX+x, screenY+y);
+    }
+  }
+
+  boolean isCorrect() {
+    return input.getInput().matches("^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$");
+  }
+}
+
 class BarChart extends Widget {
   Bar[] bars;
   int width, height;
@@ -471,6 +497,19 @@ class QueryShow implements ButtonObserver {
       barChart = new BarChart(10, 60, barWidth, barHeight, "Origin Airport", "Cancelled flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN"), airports.toArray(new String[airports.size()]));
       newScreen.addWidget(barChart);
       activeScreen = newScreen;
+    } else if (button.text.equals("Display flights by days of the week")) {
+      if (startDateVerify.isCorrect() && endDateVerify.isCorrect()) {
+        Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+        Button b = new Button(10, 10, 100, 30, "Close");
+        b.addObserver(new CloseButton(oldScreen));
+        b.setColor(color(255));
+        newScreen.addWidget(b);
+        BarChart barChart;
+        int[] frequency = frequencyDays(table.displayedTable, startDateInput.getInput(), endDateInput.getInput());
+        barChart = new BarChart(10, 60, 800, 500, "Number of flights", "Day of the week", frequency, new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"});
+        newScreen.addWidget(barChart);
+        activeScreen = newScreen;
+      }
     }
   }
 }
@@ -486,6 +525,19 @@ class CloseButton implements ButtonObserver {
     activeScreen = oldScreen;
   }
 }
+
+class Text extends Widget {
+  String txt;
+  Text(int x, int y, String txt) {
+    super(x, y);
+    this.txt = txt;
+  }
+
+  void draw(int screenX, int screenY) {
+    text(txt, screenX+x, screenY+y);
+  }
+}
+
 
 class Screen {
   int x, y;
