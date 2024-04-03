@@ -1,5 +1,5 @@
 # CSU11031_Team33
-Programming project for CSU11031 course. The goal of the project is to construct an application to explore data relating to commercial flights.
+Programming project for CSU11031 course. The goal of the project is to construct an application to explore data relating to commercial flights. 
 
 Member names:
 Danila Romanenko - 22338674
