@@ -11,6 +11,7 @@ Input search;
 Input searchField;
 Query origin;
 PFont bigFont;
+PFont mediumFont;
 PFont smallFont;
 
 void settings() {
@@ -31,7 +32,7 @@ void setup () {
   clearButton = new Button(520, 0, 50, 30, "Clear");
   clearButton.setColor(color(255));
   tableScreen.addWidget(clearButton);
-  unreliableButton = new Button(600, 0, 160, 30, "Display unreliable flights");
+  unreliableButton = new Button(600, 0, 160, 30, "Display cancelled flights");
   unreliableButton.setColor(color(255));
   tableScreen.addWidget(unreliableButton);
   //departureInput = new Input(10, 0, 100, 30);
@@ -62,6 +63,7 @@ void setup () {
   //origin.frequencyDays(1, 10);
   //origin.getFlight("AS");
   bigFont = loadFont(BIG_FONT);
+  mediumFont = loadFont(MEDIUM_FONT);
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
 

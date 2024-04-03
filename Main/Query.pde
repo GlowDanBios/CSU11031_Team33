@@ -19,7 +19,40 @@ class Query {
     return i;
   }
   
- 
+   int[] unreliable(Table table, String[] indVariable, String cat, String type){
+    int[] delays  = new int[indVariable.length];
+      for (int i=0; i<indVariable.length; i++){
+            if(cat == "DEP_TIME"){
+          delays[i] = delayedFlight(table,indVariable[i], type);
+      }
+      else{
+        delays[i] = cancelledDivertedFLights(table,indVariable[i], cat, type);
+      }
+    }   
+    for(int i=0; i<delays.length; i++){
+    }
+    return delays;
+  }
+
+  int delayedFlight(Table table, String indVariable, String type){
+    int delayed = 0;
+    for (TableRow row : table.findRows(indVariable, type)){
+      if (row.getInt("DEP_TIME") > row.getInt("CRS_DEP_TIME")){
+        delayed += 1;
+      }
+    }
+    return delayed;
+  }
+  
+  int cancelledDivertedFLights(Table table,String indVariable, String cat, String type){
+    int amountInstances = 0;
+    for (TableRow row : table.findRows(indVariable, type)){
+      if (row.getInt(cat) ==1){
+        amountInstances += 1;
+      }
+    }
+    return amountInstances;
+  }
 
 
   int[] frequencyDays(int startDate, int endDate){

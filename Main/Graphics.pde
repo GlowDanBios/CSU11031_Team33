@@ -17,6 +17,7 @@ class Widget {
 class TableView extends Widget {
   Table table;
   Table displayedTable;
+  Table beforeSortTable;
   int[] columnStarts;
   String sortedBy;
   boolean sortReverse = false;
@@ -169,6 +170,7 @@ class TableView extends Widget {
 
   void sort(String col) {
     if (sortedBy == null) {
+      beforeSortTable = displayedTable.copy();
       displayedTable.sort(col);
       sortedBy = col;
     } else if (sortedBy.equals(col)) {
@@ -176,11 +178,11 @@ class TableView extends Widget {
       if (sortReverse) {
         displayedTable.sortReverse(col);
       } else {
-        displayedTable = cleanData(table);
+        displayedTable = beforeSortTable;
         sortedBy = null;
       }
     } else {
-      displayedTable = cleanData(table);
+      displayedTable = beforeSortTable;
       displayedTable.sort(col);
       sortedBy = col;
     }
@@ -195,7 +197,7 @@ class TableView extends Widget {
       }
     }
     if (!flag) return;
-    displayedTable = new Table(displayedTable.findRows(query.toUpperCase(), column.toUpperCase()));
+    displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
   }
 
   void clear() {
@@ -306,12 +308,12 @@ class BarChart extends Widget {
     this.xAxis= xAxis;
     this.yAxis = yAxis;
     int colNum = values.length;
-    colWidth = (int)((width/colNum)/1.2);
+    colWidth = (int)((width/colNum)/1.1);
     colSpace = colWidth/5;
     int maxVal = max(values);
     bars = new Bar[colNum];
     for (int i = 0; i <values.length; i++) {
-      bars[i] = new Bar(values[i], color(100, 0, 0), colWidth, (int)(((float)values[i]/maxVal)*0.9*height), names[i], height);
+      bars[i] = new Bar(values[i], color(100, 0, 0), colWidth, (int)(((float)values[i]/maxVal)*0.95*height), names[i], height);
     }
   }
 
@@ -321,7 +323,7 @@ class BarChart extends Widget {
     for (int i =0; i<bars.length; i++) {
       bars[i].draw(screenX+x+20+i*(colSpace+colWidth), screenY+y, screenX+x);
     }
-    text(xAxis, screenX+x-textWidth(xAxis)/2, screenY+y);
+    text(xAxis, screenX+x, screenY+y);
     text(yAxis, screenX+width, screenY+y+height+15);
   }
 }
@@ -343,7 +345,10 @@ class Bar {
   }
 
   void draw(int x, int y, int chartStart) {
-    textFont(smallFont);
+    if (width<30)
+      textFont(smallFont);
+    else
+      textFont(mediumFont);
     fill(c);
     rect(x, y+(chartHeight-height), width, height);
     text(name, x, y+chartHeight+20);
@@ -435,29 +440,50 @@ class SearchFilter implements ButtonObserver {
   }
 }
 
-class QueryShow implements ButtonObserver{
+class QueryShow implements ButtonObserver {
   TableView table;
   Screen oldScreen;
-  
-  QueryShow(TableView table){
+
+  QueryShow(TableView table) {
     this.table = table;
   }
-  
-  void buttonClicked(Button button){
+
+  void buttonClicked(Button button) {
     oldScreen = activeScreen;
-    if(button.text.equals("Display unreliable flights")){
+    if (button.text.equals("Display cancelled flights")) {
       Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
       ArrayList<String> airports = new ArrayList<String>();
       String[] originCol = table.displayedTable.getStringColumn("ORIGIN");
-      for(String s:originCol){
-        if(!airports.contains(s)) airports.add(s);
+      for (String s : originCol) {
+        if (!airports.contains(s)) airports.add(s);
       }
+      Button b = new Button(10, 10, 100, 30, "Close");
+      b.addObserver(new CloseButton(oldScreen));
+      b.setColor(color(255));
+      newScreen.addWidget(b);
       BarChart barChart;
-      if(airports.size()>20) barChart = new BarChart(10,10,2000,700,"Airpot", "Number of flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN") ,airports.toArray(new String[airports.size()]));
-      else barChart = new BarChart(10,10,1000,350,"Airpot", "Number of flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN") ,airports.toArray(new String[airports.size()]));
+      int barWidth = (airports.size()/5)*200;
+      int barHeight = (airports.size()/5)*70;
+      if (barWidth<MIN_BAR_WIDTH) barWidth = MIN_BAR_WIDTH;
+      if (barWidth>MAX_BAR_WIDTH) barWidth = MAX_BAR_WIDTH;
+      if (barHeight<MIN_BAR_HEIGHT) barHeight = MIN_BAR_HEIGHT;
+      if (barHeight>MAX_BAR_HEIGHT) barHeight = MAX_BAR_HEIGHT;
+      barChart = new BarChart(10, 60, barWidth, barHeight, "Origin Airport", "Cancelled flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN"), airports.toArray(new String[airports.size()]));
       newScreen.addWidget(barChart);
       activeScreen = newScreen;
     }
+  }
+}
+
+class CloseButton implements ButtonObserver {
+  Screen oldScreen;
+
+  CloseButton(Screen screen) {
+    oldScreen = screen;
+  }
+
+  void buttonClicked(Button button) {
+    activeScreen = oldScreen;
   }
 }
 
