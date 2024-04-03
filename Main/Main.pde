@@ -100,6 +100,11 @@ void draw() {
   // departureInput.draw(activeScreen.getX(), activeScreen.getY());
   // returnInput.draw(activeScreen.getX(), activeScreen.getY());
 }
+/**
+
+Handles keyboard input.
+Allows scrolling the active screen and switching between screens.
+*/
 
 void keyPressed() {
   if (selectedWidget == null) {
