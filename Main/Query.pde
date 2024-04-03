@@ -63,7 +63,7 @@ class Query {
     int saturday = 0;
     int sunday = 0;
     String date = "";
-    for (int i =0; i<=1998; i++) {
+    for (int i =0; i<=table.getRowCount()-1; i++) {
       TableRow row = table.getRow(i);
       date = row.getString("FL_DATE");
       String[] parts = date.split("/");
