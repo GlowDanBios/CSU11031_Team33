@@ -26,46 +26,46 @@ void settings() {
 }
 
 void setup () {
-  table = loadTable("Files/flights2k.csv", "header");
+  table = loadTable("Files/flights2k.csv", "header"); // Load flight data from the specified CSV file
 
-  tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  searchField = new Input(110, 0, 200, 30, "Column name");
+  tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER); // Initialize the main screen for displaying flight data
+  searchField = new Input(110, 0, 200, 30, "Column name");  // Initialize search input and button
   search = new Input(320, 0, 200, 30, "Search value");
-  tableScreen.addWidget(search);
-  tableScreen.addWidget(searchField);
+  tableScreen.addWidget(search); // Add UI elements to the main screen
+  tableScreen.addWidget(searchField);  // Add UI elements to the main screen
   searchButton = new Button(560, 0, 50, 30, "Search");
   searchButton.setColor(color(255));
-  tableScreen.addWidget(searchButton);
+  tableScreen.addWidget(searchButton);  // Add UI elements to the main screen
   clearButton = new Button(620, 0, 50, 30, "Clear");
   clearButton.setColor(color(255));
-  tableScreen.addWidget(clearButton);
+  tableScreen.addWidget(clearButton);  // Add UI elements to the main screen
   unreliableButton = new Button(700, 0, 160, 30, "Display cancelled flights");
   unreliableButton.setColor(color(255));
-  tableScreen.addWidget(unreliableButton);
+  tableScreen.addWidget(unreliableButton);  // Add UI elements to the main screen
   startDateInput = new Input(1000, 0, 200, 30, "Start date");
-  tableScreen.addWidget(startDateInput);
+  tableScreen.addWidget(startDateInput);  // Add UI elements to the main screen
   startDateVerify = new DateVerify(startDateInput, "Correct", "Wrong date format");
-  tableScreen.addWidget(startDateVerify);
+  tableScreen.addWidget(startDateVerify);  // Add UI elements to the main screen
   endDateInput = new Input(1220, 0, 200, 30, "End date");
-  tableScreen.addWidget(endDateInput);
+  tableScreen.addWidget(endDateInput);  // Add UI elements to the main screen
   endDateVerify = new DateVerify(endDateInput, "Correct", "Wrong date format");
-  tableScreen.addWidget(endDateVerify);
+  tableScreen.addWidget(endDateVerify);  // Add UI elements to the main screen
   weekDaysButton = new Button(1450, 0, 200, 30, "Display flights by days of the week");
   weekDaysButton.setColor(color(255));
-  tableScreen.addWidget(weekDaysButton);
+  tableScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
   filterText = new Text(10, 20, "Filter entries: ");
-  tableScreen.addWidget(filterText);
+  tableScreen.addWidget(filterText);  // Add UI elements to the main screen
   weekdaysText = new Text(890, 20, "Enter date range: ");
-  tableScreen.addWidget(weekdaysText);
+  tableScreen.addWidget(weekdaysText);  // Add UI elements to the main screen
 
   //departureInput = new Input(10, 0, 100, 30);
   //tableScreen.addWidget(departureInput);
   //returnInput = new Input(120, 0, 100, 30);
   //tableScreen.addWidget(returnInput);
 
-  gTable = new TableView(table, 0, 100);
+  gTable = new TableView(table, 0, 100);  // Initialize the table view for displaying flight data
   tableScreen.addWidget(gTable);
-  searchButton.addObserver(new SearchFilter(gTable));
+  searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));
   unreliableButton.addObserver(new QueryShow(gTable));
   weekDaysButton.addObserver(new QueryShow(gTable));
@@ -86,12 +86,12 @@ void setup () {
   //barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
   //origin.frequencyDays(1, 10);
   //origin.getFlight("AS");
-  bigFont = loadFont(BIG_FONT);
+  bigFont = loadFont(BIG_FONT);  // Set up fonts for text rendering
   mediumFont = loadFont(MEDIUM_FONT);
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
 
-  activeScreen = tableScreen;
+  activeScreen = tableScreen;  // Set the active screen to the main table screen
 }
 
 void draw() {
