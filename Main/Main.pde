@@ -26,9 +26,11 @@ void settings() {
 }
 
 void setup () {
-  table = loadTable("Files/flights2k.csv", "header"); // Load flight data from the specified CSV file
+// Load flight data from the specified CSV file
+  table = loadTable("Files/flights2k.csv", "header"); 
 
-  tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER); // Initialize the main screen for displaying flight data
+// Initialize the main screen for displaying flight data
+  tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER); 
   searchField = new Input(110, 0, 200, 30, "Column name");  // Initialize search input and button
   search = new Input(320, 0, 200, 30, "Search value");
   tableScreen.addWidget(search); // Add UI elements to the main screen
@@ -63,7 +65,8 @@ void setup () {
   //returnInput = new Input(120, 0, 100, 30);
   //tableScreen.addWidget(returnInput);
 
-  gTable = new TableView(table, 0, 100);  // Initialize the table view for displaying flight data
+ // Initialize the table view for displaying flight data
+  gTable = new TableView(table, 0, 100); 
   tableScreen.addWidget(gTable);
   searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));
@@ -86,12 +89,14 @@ void setup () {
   //barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
   //origin.frequencyDays(1, 10);
   //origin.getFlight("AS");
-  bigFont = loadFont(BIG_FONT);  // Set up fonts for text rendering
+ // Set up fonts for text rendering
+  bigFont = loadFont(BIG_FONT); 
   mediumFont = loadFont(MEDIUM_FONT);
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
 
-  activeScreen = tableScreen;  // Set the active screen to the main table screen
+// Set the active screen to the main table screen
+  activeScreen = tableScreen;  
 }
 
 void draw() {
