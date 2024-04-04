@@ -98,6 +98,32 @@ class Query {
     }
     return frequencyByDay;
   }
+    int[] frequentRoutes(){
+    String[] origins =  new String[5];
+    int i = 0;
+    int j = 0;
+    int[] gorsepkay = new int[0];
+    while (origins[4] == null){
+     String originy = table.getString(i, "ORIGIN");
+     boolean containsTarget = false;
+     
+     for (String str : origins) {
+        if (originy.equals(str)) {
+          containsTarget = true;
+                break;
+        }
+      }
+        if(!containsTarget){
+          origins[j] = originy;
+          j++;
+        }
+             
+     i++;
+    }
+
+
+
+
 }
 
 static int[] unreliable(Table table, String[] indVariable, String cat, String type) {
