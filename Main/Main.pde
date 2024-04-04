@@ -34,7 +34,28 @@ PImage mapImage;
  boolean keyA = false;
  boolean keyS = false;
  boolean keyD = false;
- 
+ //import processing.sound.*;
+//SoundFile file;
+
+//PImage[] clouds = new PImage[6];
+//PImage plane;
+
+//int cloudCount = 6;
+//Cloud[] cloudObjects = new Cloud[cloudCount];
+//Plane planeObject;
+//color bgColor1 = color(250);
+//color bgColor = color(255); // Background color to remove
+
+//// Screen states
+//final int HOME_SCREEN = 0;
+//final int GRAPHS_SCREEN = 1;
+//final int TABLE_SCREEN = 2;
+
+//int currentScreen = HOME_SCREEN;
+
+//Buttons graphsButton;
+//Buttons tableButton;
+//Buttons homeButton;
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -136,6 +157,22 @@ void setup () {
 
   // Set the active screen to the main table screen
   activeScreen = tableScreen;
+
+  //loadClouds();
+  //file = new SoundFile(this, "background.mp3");
+  //file.play();
+  //file.amp(0.5);
+  //for (int i = 0; i < cloudCount; i++) {
+  //  int randomIndex = int(random(clouds.length));
+  //  cloudObjects[i] = new Cloud(clouds[randomIndex]);
+  //}
+  
+  //plane = loadImage("plane.jpg"); // Load your plane image
+  //removeBackground(plane); // Remove background from plane image
+  //planeObject = new Plane(plane);
+  
+  //graphsButton = new Buttons("Graphs", width/2 - 300, height-500);
+  //tableButton = new Buttons("Table", width/2 + 300, height-500);
 }
 
 void draw() {
@@ -143,6 +180,19 @@ void draw() {
   activeScreen.draw();
   // departureInput.draw(activeScreen.getX(), activeScreen.getY());
   // returnInput.draw(activeScreen.getX(), activeScreen.getY());
+
+  //background(135, 206, 235); // Sky Blue
+  
+  //if (currentScreen == HOME_SCREEN) {
+  //  drawHomeScreen();
+  //} else if (currentScreen == GRAPHS_SCREEN) {
+  //  // Draw the graphs screen
+  //  drawGraphsScreen();
+  //} else if (currentScreen == TABLE_SCREEN) {
+  //  // Draw the table screen
+  //  drawTableScreen();
+  //}
+
   activeScreen.screenMove();
   if (activeScreen == mapScreen) {
         airportsList.displayAirports();
@@ -182,6 +232,18 @@ void mousePressed() {
   for (Widget widget : screenWidgets) {
     widget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, true);
   }
+  
+  //if (currentScreen == HOME_SCREEN) {
+  //  if (graphsButton.isClicked()) {
+  //    currentScreen = GRAPHS_SCREEN;
+  //  } else if (tableButton.isClicked()) {
+  //    currentScreen = TABLE_SCREEN;
+  //  }
+  //} else {
+  //  if (homeButton.isClicked()) {
+  //    currentScreen = HOME_SCREEN;
+  //  }
+  //}
 }
 // written by James McNamee
 //ArrayList<DataPoint> queryDateRange(ArrayList<DataPoint> dataSet, Date startDate, Date endDate)
@@ -196,4 +258,36 @@ void mousePressed() {
 //        }
 //    }
 //    return results;
+//}
+//void drawHomeScreen() {
+//  for (int i = 0; i < cloudCount; i++) {
+//    cloudObjects[i].display();
+//    cloudObjects[i].move();
+//  }
+//  planeObject.display();
+//  planeObject.move();
+  
+//  graphsButton.display();
+//  tableButton.display();
+//}
+
+//void drawGraphsScreen() {
+//  // Draw the graphs screen
+//  background(255); // White background
+//  textSize(32);
+//  fill(0);
+ 
+  
+  
+//  // Draw home button
+//  homeButton = new Buttons("Home", 100, 50);
+//  homeButton.display();
+//}
+
+//void drawTableScreen() {
+//  // Draw the table screen
+//  background(255); // White background
+// activeScreen.draw();
+//  homeButton = new Buttons("Home", 50, 50);
+//  homeButton.display();
 //}
