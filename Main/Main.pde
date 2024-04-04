@@ -20,6 +20,21 @@ Text weekdaysText;
 PFont bigFont;
 PFont mediumFont;
 PFont smallFont;
+Airport atlanta;
+Airport anchorage;
+Airport albany;
+Airport boston;
+Airport albuquerque;
+Airport austin;
+Airport baltimore;
+Airport bozeman;
+Airport la;
+PImage mapImage;
+ boolean keyW = false;
+ boolean keyA = false;
+ boolean keyS = false;
+ boolean keyD = false;
+ 
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -80,6 +95,29 @@ void setup () {
   ////barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
   //origin = new Query(table, "JFK", "FLL", "ORIGIN");
 
+ mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  USAMap = new Map(60, 60);
+  atlanta = new Airport(atlantaX, atlantaY);
+  anchorage = new Airport(anchorageX, anchorageY);
+  albany = new Airport(albanyX, albanyY);
+  boston = new Airport(bostonX, bostonY);
+   albuquerque = new Airport(albuquerqueX, albuquerqueY);
+    austin = new Airport(austinX, austinY);
+     baltimore = new Airport(baltimoreX, baltimoreY);
+      bozeman = new Airport(bozemanX, bozemanY);
+      la = new Airport(laX, laY);
+  airportsList = new AirportsList();
+  airportsList.addAirport(atlanta);
+  airportsList.addAirport(anchorage);
+  airportsList.addAirport(albany);
+  airportsList.addAirport(boston);
+  airportsList.addAirport(albuquerque);
+  airportsList.addAirport(austin);
+  airportsList.addAirport(baltimore);
+  airportsList.addAirport(bozeman);
+  airportsList.addAirport(la);
+  mapScreen.addWidget(USAMap);
+
   //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   //origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
   //String[] entryArray = {"WN", "B6", "AS"};
@@ -105,6 +143,10 @@ void draw() {
   activeScreen.draw();
   // departureInput.draw(activeScreen.getX(), activeScreen.getY());
   // returnInput.draw(activeScreen.getX(), activeScreen.getY());
+  activeScreen.screenMove();
+  if (activeScreen == mapScreen) {
+        airportsList.displayAirports();
+        la.connectAirports(la, austin);
 }
 /**
  
@@ -113,24 +155,21 @@ void draw() {
  */
 
 void keyPressed() {
-  if (selectedWidget == null) {
-    if (key == 'w') {
-      if (activeScreen.getY()+SCROLL_SPEED<TABLE_TOP_BORDER)
-        activeScreen.move(activeScreen.getX(), activeScreen.getY()+SCROLL_SPEED);
-    } else if (key == 's') {
-      activeScreen.move(activeScreen.getX(), activeScreen.getY()-SCROLL_SPEED);
-    } else if (key == 'a') {
-      if (activeScreen.getX()+SCROLL_SPEED<TABLE_LEFT_BORDER)
-        activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY());
-    } else if (key == 'd') {
-      activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
-    } else if (key == 'm') {
-      activeScreen = barScreen;
-    } else if (key == 'n') {
-      activeScreen = tableScreen;
-    } else if (key == 'k') {
-      gTable.filter(searchField.getInput(), search.getInput());
-    }
+  void keyPressed() {
+   if(key == 'w') keyW = true;
+   if(key == 'a') keyA = true;
+   if(key == 's') keyS = true;
+   if(key == 'd') keyD = true;
+}
+
+   void keyReleased() {
+     if(key == 'w') keyW = false;
+   if(key == 'a') keyA =   false;
+   if(key == 's') keyS =   false;
+   if(key == 'd') keyD =   false;
+   }
+
+    } 
   } else {
     selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
   }
