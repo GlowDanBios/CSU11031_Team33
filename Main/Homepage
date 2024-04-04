@@ -1,0 +1,82 @@
+//class Plane {
+//  PImage img;
+//  float x, y;
+//  float speed = 1;
+//  float amplitude = 100; // Amplitude of the sine wave motion
+//  float angle = 0; // Angle for the sine wave motion
+  
+//  Plane(PImage img_) {
+//    img = img_;
+//    x = width/2-200;
+//    y = height/2-350;
+//  }
+  
+//  void display() {
+//    image(img, x, y, 400, 400); // Adjusted size to 400x400
+//  }
+  
+//  void move() {
+//    angle += 0.05; // Increment angle for smooth motion
+//    y = height/2-350 + sin(angle) * amplitude; // Calculate y position based on sine wave
+//  }
+//}
+
+//class Cloud {
+//  PImage img;
+//  float x, y;
+//  float speed;
+  
+//  Cloud(PImage img_) {
+//    img = img_;
+//    x = random(250, width - 250); // Ensure x-coordinate is within bounds
+//    y = -300; // Set initial y-coordinate above the screen
+//    speed = random(0.5, 1.5);
+    
+//    // Check if the initial y-coordinate overlaps with other clouds
+//    for (Cloud cloud : cloudObjects) {
+//      if (cloud != null && dist(x, y, cloud.x, cloud.y) < 400) {
+//        y -= 400; // Adjust y-coordinate to avoid overlap
+//      }
+//    }
+//  }
+  
+//  void display() {
+//    image(img, x, y, 400, 400);
+//  }
+  
+//  void move() {
+//    y += speed + random(0.5, 1);
+    
+//    if (y > height + 250) {
+//      y = -250;
+//      x = random(250, width - 250);
+//    }
+//  }
+//}
+
+//class Buttons {
+//  String label;
+//  float x, y;
+//  float w = 200;
+//  float h = 100;
+  
+//  Buttons(String label_, float x_, float y_) {
+//    label = label_;
+//    x = x_;
+//    y = y_;
+//  }
+  
+//  void display() {
+//    fill(255);
+//    stroke(0);
+//    rectMode(CENTER);
+//    rect(x, y, w, h);
+//    fill(0);
+//    textSize(16);
+//    textAlign(CENTER, CENTER);
+//    text(label, x, y);
+//  }
+  
+//  boolean isClicked() {
+//    return mouseX > x - w/2 && mouseX < x + w/2 && mouseY > y - h/2 && mouseY < y + h/2;
+//  }
