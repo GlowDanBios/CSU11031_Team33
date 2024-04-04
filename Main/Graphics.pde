@@ -474,6 +474,9 @@ class Button extends Widget {
     else if(key == 'b'){
       activeScreen = mapScreen;
   }
+else if (key == 'k') {
+      gTable.filter(searchField.getInput(), search.getInput());
+    }
   }
   else{
     selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
