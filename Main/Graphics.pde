@@ -437,6 +437,108 @@ class Button extends Widget {
   }
 }
 
+   void screenMove() {
+  if (selectedWidget == null) {
+   if(keyW && !keyA && !keyS && !keyD){
+   if (activeScreen.getY()+SCROLL_SPEED<TABLE_TOP_BORDER)
+   activeScreen.move(activeScreen.getX(), activeScreen.getY()+SCROLL_SPEED);
+  }
+  else if(!keyW && keyA && !keyS && !keyD){
+  if (activeScreen.getX()+SCROLL_SPEED<TABLE_LEFT_BORDER)
+  activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY());
+  }
+  else if(!keyW && !keyA && keyS && !keyD){
+  activeScreen.move(activeScreen.getX(), activeScreen.getY()-SCROLL_SPEED);
+  }
+  else if(!keyW && !keyA && !keyS && keyD){
+  activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
+ }
+ else if(keyW && keyA && !keyS && !keyD){
+   activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY()+SCROLL_SPEED);
+ }
+ else if(keyW && !keyA && !keyS && keyD){
+   activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY()+SCROLL_SPEED);
+ }
+  else if(!keyW && keyA && keyS && !keyD){
+   activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY()-SCROLL_SPEED);
+  }
+   else if(!keyW && !keyA && keyS && keyD){
+   activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY()-SCROLL_SPEED);
+   }
+    else if(key == 'm'){
+      activeScreen = barScreen;
+    }
+    else if(key == 'n'){
+      activeScreen = tableScreen;
+    }
+    else if(key == 'b'){
+      activeScreen = mapScreen;
+  }
+  }
+  else{
+    selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
+
+  }
+   }
+class Map extends Widget {
+  
+   Map(int x, int y){
+     super(x, y);
+     ArrayList<Airport> points = new ArrayList<Airport>();
+ }
+  
+  void draw(int x, int y) {
+    image(mapImage, 50, 10, 1000, 800);
+    
+  }
+}
+ class Airport {
+
+  int x, y;
+
+  Airport(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  void draw(int x, int y) {
+    fill(245, 158, 66);
+    ellipse(this.x, this.y, 15, 15);
+  }
+  int getX(){
+    return x;
+  }
+  int getY(){
+    return y;
+  }
+
+ void connectAirports(Airport airportA, Airport airportB){
+   stroke(191, 19, 19);
+   strokeWeight(4);
+  line(airportA.x, airportA.y, airportB.x, airportB.y);
+}
+  }
+ 
+
+class AirportsList {
+   ArrayList<Airport> points = new ArrayList<>();
+  AirportsList() {
+  }
+
+   void addAirport(Airport airport) {
+   points.add(airport);
+    }
+      void displayAirports() {
+    for (Airport airport : points) {
+      airport.draw(airport.getX(), airport.getY());
+    }
+    System.out.println("hey");
+  }
+   ArrayList<Airport> getPoints() {
+    return points;
+ }
+}
+
 
 class SortClick implements ButtonObserver {
   TableView table;
