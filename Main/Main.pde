@@ -1,13 +1,17 @@
 Table table;
 TableView gTable;
+Screen controlsScreen;
 Screen tableScreen;
 Screen barScreen;
 Screen activeScreen;
+Screen mapScreen;
 Widget selectedWidget;
 Button searchButton;
 Button clearButton;
-Button unreliableButton;
+Button cancelledButton;
+Button delayedButton;
 Button weekDaysButton;
+Button showTableButton;
 Input search;
 Input searchField;
 Input startDateInput;
@@ -20,6 +24,8 @@ Text weekdaysText;
 PFont bigFont;
 PFont mediumFont;
 PFont smallFont;
+Map USAMap;
+AirportsList airportsList;
 Airport atlanta;
 Airport anchorage;
 Airport albany;
@@ -30,11 +36,11 @@ Airport baltimore;
 Airport bozeman;
 Airport la;
 PImage mapImage;
- boolean keyW = false;
- boolean keyA = false;
- boolean keyS = false;
- boolean keyD = false;
- 
+boolean keyW = false;
+boolean keyA = false;
+boolean keyS = false;
+boolean keyD = false;
+int rowX, rowStart, rowHeight;
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -46,69 +52,74 @@ void setup () {
   table = loadTable("Files/"+MAIN_FILE_NAME, "header");
   println("Download done");
   // Initialize the main screen for displaying flight data
+  rowX = WINDOW_WIDTH/3;
+  rowStart = WINDOW_HEIGHT/5;
+  rowHeight = WINDOW_HEIGHT/20;
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  searchField = new Input(110, 0, 200, 30, "Column name");  // Initialize search input and button
-  search = new Input(320, 0, 200, 30, "Search value");
-  tableScreen.addWidget(search); // Add UI elements to the main screen
-  tableScreen.addWidget(searchField);  // Add UI elements to the main screen
-  searchButton = new Button(560, 0, 50, 30, "Search");
+  controlsScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  searchField = new Input(rowX+110, rowStart, 200, 30, "Column name");  // Initialize search input and button
+  search = new Input(rowX+320, rowStart, 200, 30, "Search value");
+  controlsScreen.addWidget(search); // Add UI elements to the main screen
+  controlsScreen.addWidget(searchField);  // Add UI elements to the main screen
+  searchButton = new Button(rowX+560, rowStart, 50, 30, "Search");
   searchButton.setColor(color(255));
-  tableScreen.addWidget(searchButton);  // Add UI elements to the main screen
-  clearButton = new Button(620, 0, 50, 30, "Clear");
+  controlsScreen.addWidget(searchButton);  // Add UI elements to the main screen
+  clearButton = new Button(rowX+620, rowStart, 50, 30, "Clear");
   clearButton.setColor(color(255));
-  tableScreen.addWidget(clearButton);  // Add UI elements to the main screen
-  unreliableButton = new Button(700, 0, 160, 30, "Display cancelled flights");
-  unreliableButton.setColor(color(255));
-  tableScreen.addWidget(unreliableButton);  // Add UI elements to the main screen
-  startDateInput = new Input(1000, 0, 200, 30, "Start date");
-  tableScreen.addWidget(startDateInput);  // Add UI elements to the main screen
+  controlsScreen.addWidget(clearButton);  // Add UI elements to the main screen
+  cancelledButton = new Button(rowX, rowStart+rowHeight*2, 160, 30, "Display cancelled flights");
+  cancelledButton.setColor(color(255));
+  controlsScreen.addWidget(cancelledButton);
+  delayedButton = new Button(880, 0, 160, 30, "Display delayed flights");
+  delayedButton.setColor(color(255));
+  //controlsScreen.addWidget(delayedButton); // Add UI elements to the main screen
+  startDateInput = new Input(rowX+120, rowStart+rowHeight, 200, 30, "Start date");
+  controlsScreen.addWidget(startDateInput);  // Add UI elements to the main screen
   startDateVerify = new DateVerify(startDateInput, "Correct", "Wrong date format");
-  tableScreen.addWidget(startDateVerify);  // Add UI elements to the main screen
-  endDateInput = new Input(1220, 0, 200, 30, "End date");
-  tableScreen.addWidget(endDateInput);  // Add UI elements to the main screen
+  controlsScreen.addWidget(startDateVerify);  // Add UI elements to the main screen
+  endDateInput = new Input(rowX+350, rowStart+rowHeight, 200, 30, "End date");
+  controlsScreen.addWidget(endDateInput);  // Add UI elements to the main screen
   endDateVerify = new DateVerify(endDateInput, "Correct", "Wrong date format");
-  tableScreen.addWidget(endDateVerify);  // Add UI elements to the main screen
-  weekDaysButton = new Button(1450, 0, 200, 30, "Display flights by days of the week");
+  controlsScreen.addWidget(endDateVerify);  // Add UI elements to the main screen
+  weekDaysButton = new Button(rowX+200, rowStart+rowHeight*2, 200, 30, "Display flights by days of the week");
   weekDaysButton.setColor(color(255));
-  tableScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
-  filterText = new Text(10, 20, "Filter entries: ");
-  tableScreen.addWidget(filterText);  // Add UI elements to the main screen
-  weekdaysText = new Text(890, 20, "Enter date range: ");
-  tableScreen.addWidget(weekdaysText);  // Add UI elements to the main screen
+  controlsScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
+  showTableButton = new Button(rowX+430, rowStart+rowHeight*2, 150, 30, "Display table entries");
+  showTableButton.setColor(color(255));
+  controlsScreen.addWidget(showTableButton);
+  filterText = new Text(rowX, rowStart+20, "Filter entries: ");
+  controlsScreen.addWidget(filterText);  // Add UI elements to the main screen
+  weekdaysText = new Text(rowX, rowStart+rowHeight+20, "Enter date range: ");
+  controlsScreen.addWidget(weekdaysText);  // Add UI elements to the main screen
 
-  //departureInput = new Input(10, 0, 100, 30);
-  //tableScreen.addWidget(departureInput);
-  //returnInput = new Input(120, 0, 100, 30);
-  //tableScreen.addWidget(returnInput);
 
   // Set the active screen to the main table screen
-  activeScreen = tableScreen;
+  activeScreen = controlsScreen;
 
   // Initialize the table view for displaying flight data
-  gTable = new TableView(table, 0, 100);
+  gTable = new TableView(table, 0, 100); //<>//
   tableScreen.addWidget(gTable);
   searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));
-  unreliableButton.addObserver(new QueryShow(gTable));
+  cancelledButton.addObserver(new QueryShow(gTable));
+  delayedButton.addObserver(new QueryShow(gTable));
   weekDaysButton.addObserver(new QueryShow(gTable));
+  showTableButton.addObserver(new TableShow(gTable));
 
 
-  //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  ////barScreen.addWidget(new Input(10, 400, 300, 30));
-  ////barScreen.addWidget(new Button(360, 400, 100, 30, "Add airport"));
-  //origin = new Query(table, "JFK", "FLL", "ORIGIN");
+  
 
- mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+  mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   USAMap = new Map(60, 60);
   atlanta = new Airport(atlantaX, atlantaY);
   anchorage = new Airport(anchorageX, anchorageY);
   albany = new Airport(albanyX, albanyY);
   boston = new Airport(bostonX, bostonY);
-   albuquerque = new Airport(albuquerqueX, albuquerqueY);
-    austin = new Airport(austinX, austinY);
-     baltimore = new Airport(baltimoreX, baltimoreY);
-      bozeman = new Airport(bozemanX, bozemanY);
-      la = new Airport(laX, laY);
+  albuquerque = new Airport(albuquerqueX, albuquerqueY);
+  austin = new Airport(austinX, austinY);
+  baltimore = new Airport(baltimoreX, baltimoreY);
+  bozeman = new Airport(bozemanX, bozemanY);
+  la = new Airport(laX, laY);
   airportsList = new AirportsList();
   airportsList.addAirport(atlanta);
   airportsList.addAirport(anchorage);
@@ -121,61 +132,55 @@ void setup () {
   airportsList.addAirport(la);
   mapScreen.addWidget(USAMap);
 
-  //barScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  //origin = new Query(table, "JFK", "FLL", "MKT_CARRIER");
-  //String[] entryArray = {"WN", "B6", "AS"};
-  //String independentVariable = "MKT_CARRIER";
-  //int[][] unreliability = {origin.unreliable(entryArray, "DEP_TIME", independentVariable), origin.unreliable(entryArray, "CANCELLED", independentVariable),
-  //  origin.unreliable(entryArray, "DIVERTED", independentVariable)};
-
-  //barScreen.addWidget(new BarChart(10, 10, 500, 250, "Airport", "Flights", unreliability[0], entryArray ));
-  //origin.frequencyDays(1, 10);
-  //origin.getFlight("AS");
   // Set up fonts for text rendering
   bigFont = loadFont(BIG_FONT);
   mediumFont = loadFont(MEDIUM_FONT);
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
-
-  
 }
 
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
-  // departureInput.draw(activeScreen.getX(), activeScreen.getY());
-  // returnInput.draw(activeScreen.getX(), activeScreen.getY());
-  activeScreen.screenMove();
+  
+  if(activeScreen == controlsScreen){
+    text("Flights found: "+gTable.displayedTable.getRowCount(),activeScreen.getX()+rowX+700, activeScreen.getY()+rowStart+20);
+  }
+  
+  //activeScreen.screenMove();
   if (activeScreen == mapScreen) {
-        airportsList.displayAirports();
-        la.connectAirports(la, austin);
+    airportsList.displayAirports();
+    la.connectAirports(la, austin);
+  }
 }
 /**
- 
  Handles keyboard input.
  Allows scrolling the active screen and switching between screens.
  */
-
 void keyPressed() {
-  void keyPressed() {
-   if(key == 'w') keyW = true;
-   if(key == 'a') keyA = true;
-   if(key == 's') keyS = true;
-   if(key == 'd') keyD = true;
-}
-
-   void keyReleased() {
-     if(key == 'w') keyW = false;
-   if(key == 'a') keyA =   false;
-   if(key == 's') keyS =   false;
-   if(key == 'd') keyD =   false;
-   }
-
-    } 
+  if (selectedWidget == null) {
+    if (key == 'w') {
+      if (activeScreen.getY()+SCROLL_SPEED<TABLE_TOP_BORDER)
+        activeScreen.move(activeScreen.getX(), activeScreen.getY()+SCROLL_SPEED);
+    } else if (key == 's') {
+      activeScreen.move(activeScreen.getX(), activeScreen.getY()-SCROLL_SPEED);
+    } else if (key == 'a') {
+      if (activeScreen.getX()+SCROLL_SPEED<TABLE_LEFT_BORDER)
+        activeScreen.move(activeScreen.getX()+SCROLL_SPEED, activeScreen.getY());
+    } else if (key == 'd') {
+      activeScreen.move(activeScreen.getX()-SCROLL_SPEED, activeScreen.getY());
+    } else if (key == 'm') {
+      activeScreen = barScreen;
+    } else if (key == 'n') {
+      activeScreen = tableScreen;
+    } else if (key == 'k') {
+      gTable.filter(searchField.getInput(), search.getInput());
+    }
   } else {
     selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
   }
 }
+
 
 void mousePressed() {
   ArrayList<Widget> screenWidgets = activeScreen.getWidgets();

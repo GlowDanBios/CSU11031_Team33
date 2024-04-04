@@ -97,34 +97,31 @@ class Query {
     }
     return frequencyByDay;
   }
-    int[] frequentRoutes(){
+  String[] frequentRoutes() {
     String[] origins =  new String[5];
     int i = 0;
     int j = 0;
     int[] gorsepkay = new int[0];
-    while (origins[4] == null){
-     String originy = table.getString(i, "ORIGIN");
-     boolean containsTarget = false;
-     
-     for (String str : origins) {
+    while (origins[4] == null) {
+      String originy = table.getString(i, "ORIGIN");
+      boolean containsTarget = false;
+
+      for (String str : origins) {
         if (originy.equals(str)) {
           containsTarget = true;
-                break;
+          break;
         }
       }
-        if(!containsTarget){
-          origins[j] = originy;
-          j++;
-        }
-             
-     i++;
+      if (!containsTarget) {
+        origins[j] = originy;
+        j++;
+      }
+
+      i++;
     }
-
-
-
-
+    return origins;
+  }
 }
-
 static int[] unreliable(Table table, String[] indVariable, String cat, String type) {
   int[] delays  = new int[indVariable.length];
   for (int i=0; i<indVariable.length; i++) {
