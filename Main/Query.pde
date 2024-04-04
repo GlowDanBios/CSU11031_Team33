@@ -15,7 +15,6 @@ class Query {
     for (TableRow row : table.findRows(entry, category)) {
       i++;
     }
-    println(i);
     return i;
   }
 

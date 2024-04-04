@@ -22,6 +22,7 @@ class TableView extends Widget {
   String sortedBy;
   boolean sortReverse = false;
   Button[] columnNames;
+  ArrayList<Button> mapButtons;
 
   TableView(Table table, int x, int y) {
     super(x, y);
@@ -36,6 +37,7 @@ class TableView extends Widget {
       tableScreen.addWidget(columnNames[i]);
       columnNames[i].addObserver(obs);
     }
+    setupMapButtons();
   }
 
   void setColumnWidths() {
@@ -61,6 +63,17 @@ class TableView extends Widget {
       previousWidth = width;
     }
   }
+
+  void setupMapButtons() {
+    mapButtons = new ArrayList<Button>();
+    for (int i = 0; i<displayedTable.getRowCount(); i++) {
+      Button b = new Button(x+columnStarts[columnStarts.length-1], y+i*ROW_HEIGHT, 40, ROW_HEIGHT, "MAP");
+      b.addObserver(new MapButton(activeScreen, table.getRow(i)));
+      b.setColor(color(255));
+      mapButtons.add(b);
+    }
+  }
+
 
   void draw(int screenX, int screenY) {
     text("Displayed flights: "+displayedTable.getRowCount(), screenX+x, screenY+y-ROW_HEIGHT*1.5);
@@ -89,6 +102,7 @@ class TableView extends Widget {
             rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
             fill(TEXT_COLOR);
           }
+          mapButtons.get(j).draw(screenX, screenY);
         }
         line(screenX+x, screenY+y+j*ROW_HEIGHT, screenX+x+columnStarts[columnStarts.length-1], screenY+y+j*ROW_HEIGHT);
         if (i<10 || i>13) {
@@ -186,6 +200,7 @@ class TableView extends Widget {
       displayedTable.sort(col);
       sortedBy = col;
     }
+    setupMapButtons();
   }
 
   void filter(String column, String query) {
@@ -198,11 +213,13 @@ class TableView extends Widget {
     }
     if (!flag) return;
     displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
+    setupMapButtons();
   }
 
   void clear() {
     sortedBy = null;
     displayedTable = cleanData(table);
+    setupMapButtons();
   }
 }
 
@@ -526,6 +543,20 @@ class CloseButton implements ButtonObserver {
   }
 }
 
+class MapButton implements ButtonObserver {
+  Screen oldScreen;
+  TableRow flight;
+
+  MapButton(Screen screen, TableRow flight) {
+    oldScreen = screen;
+    this.flight = flight;
+  }
+
+  void buttonClicked(Button button) {
+    println(flight.getString("FL_DATE"));
+  }
+}
+
 class Text extends Widget {
   String txt;
   Text(int x, int y, String txt) {
@@ -552,6 +583,10 @@ class Screen {
 
   void addWidget(Widget widget) {
     widgets.add(widget);
+  }
+
+  void removeWidget(Widget widget) {
+    widgets.remove(widget);
   }
 
   void move(int desX, int desY) {

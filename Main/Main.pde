@@ -66,6 +66,9 @@ void setup () {
   //returnInput = new Input(120, 0, 100, 30);
   //tableScreen.addWidget(returnInput);
 
+  // Set the active screen to the main table screen
+  activeScreen = tableScreen;
+
   // Initialize the table view for displaying flight data
   gTable = new TableView(table, 0, 100);
   tableScreen.addWidget(gTable);
@@ -96,8 +99,7 @@ void setup () {
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
 
-  // Set the active screen to the main table screen
-  activeScreen = tableScreen;
+  
 }
 
 void draw() {
