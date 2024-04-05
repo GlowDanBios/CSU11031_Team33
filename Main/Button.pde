@@ -27,6 +27,7 @@ class Button extends Widget {
   }
 
   void notifyObservers() {
+    println(text);
     for (ButtonObserver observer : observers) {
       observer.buttonClicked(this);
     }

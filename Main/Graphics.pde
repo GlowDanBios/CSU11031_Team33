@@ -124,6 +124,7 @@ class Text extends Widget {
   }
 
   void draw(int screenX, int screenY) {
+    fill(TEXT_COLOR);
     text(txt, screenX+x, screenY+y);
   }
 }

@@ -14,8 +14,8 @@ class TableView extends Widget {
   TableView(Table table, int x, int y) {
     super(x, y);
     currentPage = 0;
-    this.table = table;
-    displayedTable = cleanData(table);
+    this.table = table.copy();
+    displayedTable = table;
     setColumnWidths();
     clickable = false;
     columnNames = new Button[displayedTable.getColumnCount()];
@@ -85,18 +85,18 @@ class TableView extends Widget {
       String[] col = displayedTable.getStringColumn(i);
       int lastRow = FLIGHTS_PER_PAGE*(currentPage+1)<displayedTable.getRowCount()?FLIGHTS_PER_PAGE*(currentPage+1):displayedTable.getRowCount();
       for (int j = FLIGHTS_PER_PAGE*currentPage; j<lastRow; j++) {
-        if (i == 1) {
-          if (isCancelled(col[j])) {
-            fill(200, 0, 0, 100);
-            rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
-            fill(TEXT_COLOR);
-          } else if (isDiverted(col[j])) {
-            fill(200, 200, 0, 100);
-            rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
-            fill(TEXT_COLOR);
-          }
-          //mapButtons.get(j).draw(screenX, screenY);
-        }
+        //if (i == 1) {
+        //  if (isCancelled(col[j])) {
+        //    fill(200, 0, 0, 100);
+        //    rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
+        //    fill(TEXT_COLOR);
+        //  } else if (isDiverted(col[j])) {
+        //    fill(200, 200, 0, 100);
+        //    rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
+        //    fill(TEXT_COLOR);
+        //  }
+        //  //mapButtons.get(j).draw(screenX, screenY);
+        //}
         line(screenX+x, screenY+y+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, screenX+x+columnStarts[columnStarts.length-1], screenY+y+j%FLIGHTS_PER_PAGE*ROW_HEIGHT);
         if (i<10 || i>13) {
           text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j%FLIGHTS_PER_PAGE*20);
@@ -203,20 +203,22 @@ class TableView extends Widget {
 
   void filter(String column, String query) {
     boolean flag = false;
-    for (String col : displayedTable.getColumnTitles()) {
-      if (column.toUpperCase().equals(col)) {
-        flag = true;
-        break;
+    if (displayedTable != null && displayedTable.getRowCount()>0) {
+      for (String col : displayedTable.getColumnTitles()) {
+        if (column.toUpperCase().equals(col)) {
+          flag = true;
+          break;
+        }
       }
+      if (!flag) return;
+      displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
+      //setupMapButtons();
     }
-    if (!flag) return;
-    displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
-    //setupMapButtons();
   }
 
   void clear() {
     sortedBy = null;
-    displayedTable = cleanData(table);
+    displayedTable = table.copy();
     setupMapButtons();
   }
 

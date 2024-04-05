@@ -21,10 +21,10 @@ class SearchFilter implements ButtonObserver {
   }
   void buttonClicked(Button button) {
     if (button.text.equals("Search")) {
-      table.filter(searchField.getInput(), search.getInput());
+      table.filter(columnSelect.getSelectedOption(), search.getInput());
     } else if (button.text.equals("Clear")) {
       table.clear();
-      searchField.clear();
+      columnSelect.clear();
       search.clear();
     }
   }
@@ -140,13 +140,13 @@ class TableShow implements ButtonObserver {
   }
 
   void buttonClicked(Button button) {
-    oldScreen = activeScreen;
-    Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-    Button b = new Button(10, 10, 100, 30, "Close");
-    b.addObserver(new CloseButton(oldScreen));
-    b.setColor(color(255));
-    newScreen.addWidget(b);
-    newScreen.addWidget(table);
-    activeScreen = newScreen;
+    //oldScreen = activeScreen;
+    //Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+    //Button b = new Button(10, 10, 100, 30, "Close");
+    //b.addObserver(new CloseButton(oldScreen));
+    //newScreen.addWidget(b);
+    //newScreen.addWidget(table);
+    //activeScreen = newScreen;
+    activeScreen = tableScreen;
   }
 }

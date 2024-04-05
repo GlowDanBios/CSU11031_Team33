@@ -16,11 +16,14 @@ Input search;
 Input searchField;
 Input startDateInput;
 Input endDateInput;
+Dropdown columnSelect;
+Slider airportSlider;
 DateVerify startDateVerify;
 DateVerify endDateVerify;
 Query origin;
 Text filterText;
 Text weekdaysText;
+Text airportsText;
 PFont bigFont;
 PFont mediumFont;
 PFont smallFont;
@@ -83,22 +86,20 @@ void setup () {
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   controlsScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
 
+
   //First row
-  searchField = new Input(rowX+110, rowStart, 200, 30, "Column name");  // Initialize search input and button
+  //searchField = new Input(rowX+110, rowStart, 200, 30, "Column name");  // Initialize search input and button
   search = new Input(rowX+320, rowStart, 200, 30, "Search value");
   controlsScreen.addWidget(search); // Add UI elements to the main screen
-  controlsScreen.addWidget(searchField);  // Add UI elements to the main screen
+  //controlsScreen.addWidget(searchField);  // Add UI elements to the main screen
   searchButton = new Button(rowX+560, rowStart, 50, 30, "Search");
   controlsScreen.addWidget(searchButton);  // Add UI elements to the main screen
   clearButton = new Button(rowX+620, rowStart, 50, 30, "Clear");
   controlsScreen.addWidget(clearButton);  // Add UI elements to the main screen
 
   //Second row
-  cancelledButton = new Button(rowX, rowStart+rowHeight*2, 160, 30, "Display cancelled flights");
-  controlsScreen.addWidget(cancelledButton);
-  //delayedButton = new Button(880, 0, 160, 30, "Display delayed flights");
-  //delayedButton.setColor(color(255));
-  //controlsScreen.addWidget(delayedButton); // Add UI elements to the main screen
+  weekdaysText = new Text(rowX, rowStart+rowHeight+20, "Enter date range: ");
+  controlsScreen.addWidget(weekdaysText);  // Add UI elements to the main screen
   startDateInput = new Input(rowX+120, rowStart+rowHeight, 200, 30, "Start date");
   controlsScreen.addWidget(startDateInput);  // Add UI elements to the main screen
   startDateVerify = new DateVerify(startDateInput, "Correct", "Wrong date format");
@@ -109,15 +110,30 @@ void setup () {
   controlsScreen.addWidget(endDateVerify);  // Add UI elements to the main screen
 
   //Third row
-  weekDaysButton = new Button(rowX+200, rowStart+rowHeight*2, 200, 30, "Display flights by days of the week");
+  airportsText = new Text(rowX, rowStart+rowHeight*2+20, "Select the number of airports to be displayed: ");
+  controlsScreen.addWidget(airportsText);
+  airportSlider = new Slider(rowX+300, rowStart+rowHeight*2, 200, 30, 1, 20);
+  controlsScreen.addWidget(airportSlider);
+
+  //Fourth row
+  cancelledButton = new Button(rowX, rowStart+rowHeight*4, 160, 30, "Display cancelled flights");
+  controlsScreen.addWidget(cancelledButton);
+  weekDaysButton = new Button(rowX+200, rowStart+rowHeight*4, 200, 30, "Display flights by days of the week");
   controlsScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
-  showTableButton = new Button(rowX+430, rowStart+rowHeight*2, 150, 30, "Display table entries");
+  showTableButton = new Button(rowX+430, rowStart+rowHeight*4, 150, 30, "Display table entries");
   controlsScreen.addWidget(showTableButton);
   filterText = new Text(rowX, rowStart+20, "Filter entries: ");
   controlsScreen.addWidget(filterText);  // Add UI elements to the main screen
-  weekdaysText = new Text(rowX, rowStart+rowHeight+20, "Enter date range: ");
-  controlsScreen.addWidget(weekdaysText);  // Add UI elements to the main screen
 
+
+
+  String[] columnTitles = new String[table.getColumnCount()+1];
+  columnTitles[0] = "Choose column name";
+  for (int i = 0; i<table.getColumnCount(); i++) {
+    columnTitles[i+1] = table.getColumnTitle(i);
+  }
+  columnSelect = new Dropdown(rowX+110, rowStart, 200, 30, columnTitles);
+  controlsScreen.addWidget(columnSelect);
 
   // Set the active screen to the main table screen
   activeScreen = controlsScreen;
@@ -125,6 +141,9 @@ void setup () {
   // Initialize the table view for displaying flight data
   gTable = new TableView(table, 0, 100);
   tableScreen.addWidget(gTable);
+  Button b = new Button(10, 10, 100, 30, "Close");
+  b.addObserver(new CloseButton(controlsScreen));
+  tableScreen.addWidget(b);
   searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));
   cancelledButton.addObserver(new QueryShow(gTable));
