@@ -78,23 +78,26 @@ void setup () {
   rowX = WINDOW_WIDTH/3;
   rowStart = WINDOW_HEIGHT/5;
   rowHeight = WINDOW_HEIGHT/20;
+
+
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   controlsScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+
+  //First row
   searchField = new Input(rowX+110, rowStart, 200, 30, "Column name");  // Initialize search input and button
   search = new Input(rowX+320, rowStart, 200, 30, "Search value");
   controlsScreen.addWidget(search); // Add UI elements to the main screen
   controlsScreen.addWidget(searchField);  // Add UI elements to the main screen
   searchButton = new Button(rowX+560, rowStart, 50, 30, "Search");
-  searchButton.setColor(color(255));
   controlsScreen.addWidget(searchButton);  // Add UI elements to the main screen
   clearButton = new Button(rowX+620, rowStart, 50, 30, "Clear");
-  clearButton.setColor(color(255));
   controlsScreen.addWidget(clearButton);  // Add UI elements to the main screen
+
+  //Second row
   cancelledButton = new Button(rowX, rowStart+rowHeight*2, 160, 30, "Display cancelled flights");
-  cancelledButton.setColor(color(255));
   controlsScreen.addWidget(cancelledButton);
-  delayedButton = new Button(880, 0, 160, 30, "Display delayed flights");
-  delayedButton.setColor(color(255));
+  //delayedButton = new Button(880, 0, 160, 30, "Display delayed flights");
+  //delayedButton.setColor(color(255));
   //controlsScreen.addWidget(delayedButton); // Add UI elements to the main screen
   startDateInput = new Input(rowX+120, rowStart+rowHeight, 200, 30, "Start date");
   controlsScreen.addWidget(startDateInput);  // Add UI elements to the main screen
@@ -104,11 +107,11 @@ void setup () {
   controlsScreen.addWidget(endDateInput);  // Add UI elements to the main screen
   endDateVerify = new DateVerify(endDateInput, "Correct", "Wrong date format");
   controlsScreen.addWidget(endDateVerify);  // Add UI elements to the main screen
+
+  //Third row
   weekDaysButton = new Button(rowX+200, rowStart+rowHeight*2, 200, 30, "Display flights by days of the week");
-  weekDaysButton.setColor(color(255));
   controlsScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
   showTableButton = new Button(rowX+430, rowStart+rowHeight*2, 150, 30, "Display table entries");
-  showTableButton.setColor(color(255));
   controlsScreen.addWidget(showTableButton);
   filterText = new Text(rowX, rowStart+20, "Filter entries: ");
   controlsScreen.addWidget(filterText);  // Add UI elements to the main screen
@@ -125,7 +128,7 @@ void setup () {
   searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));
   cancelledButton.addObserver(new QueryShow(gTable));
-  delayedButton.addObserver(new QueryShow(gTable));
+  //delayedButton.addObserver(new QueryShow(gTable));
   weekDaysButton.addObserver(new QueryShow(gTable));
   showTableButton.addObserver(new TableShow(gTable));
 
@@ -160,11 +163,6 @@ void setup () {
   mediumFont = loadFont(MEDIUM_FONT);
   smallFont = loadFont(SMALL_FONT);
   textFont(bigFont);
-  <<<<<<< HEAD
-    =======
-
-    // Set the active screen to the main table screen
-    activeScreen = tableScreen;
 
   //loadClouds();
   //file = new SoundFile(this, "background.mp3");
@@ -181,38 +179,33 @@ void setup () {
 
   //graphsButton = new Buttons("Graphs", width/2 - 300, height-500);
   //tableButton = new Buttons("Table", width/2 + 300, height-500);
-  >>>>>>> d2433aa9e19a14d4a13503eaf47351cee57706b5
 }
 
 void draw() {
   background(BACKGROUND_COLOR);
   activeScreen.draw();
-  <<<<<<< HEAD
 
-    if (activeScreen == controlsScreen) {
+  if (activeScreen == controlsScreen) {
     text("Flights found: "+gTable.displayedTable.getRowCount(), activeScreen.getX()+rowX+700, activeScreen.getY()+rowStart+20);
   }
 
   //activeScreen.screenMove();
-  =======
-    // departureInput.draw(activeScreen.getX(), activeScreen.getY());
-    // returnInput.draw(activeScreen.getX(), activeScreen.getY());
+  // departureInput.draw(activeScreen.getX(), activeScreen.getY());
+  // returnInput.draw(activeScreen.getX(), activeScreen.getY());
 
-    //background(135, 206, 235); // Sky Blue
+  //background(135, 206, 235); // Sky Blue
 
-    //if (currentScreen == HOME_SCREEN) {
-    //  drawHomeScreen();
-    //} else if (currentScreen == GRAPHS_SCREEN) {
-    //  // Draw the graphs screen
-    //  drawGraphsScreen();
-    //} else if (currentScreen == TABLE_SCREEN) {
-    //  // Draw the table screen
-    //  drawTableScreen();
-    //}
+  //if (currentScreen == HOME_SCREEN) {
+  //  drawHomeScreen();
+  //} else if (currentScreen == GRAPHS_SCREEN) {
+  //  // Draw the graphs screen
+  //  drawGraphsScreen();
+  //} else if (currentScreen == TABLE_SCREEN) {
+  //  // Draw the table screen
+  //  drawTableScreen();
+  //}
 
-    activeScreen.screenMove();
-  >>>>>>> d2433aa9e19a14d4a13503eaf47351cee57706b5
-    if (activeScreen == mapScreen) {
+  if (activeScreen == mapScreen) {
     airportsList.displayAirports();
     la.connectAirports(la, austin);
   }
