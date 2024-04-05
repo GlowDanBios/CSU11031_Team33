@@ -14,6 +14,7 @@ final int MIN_BAR_WIDTH = 500;
 final int MAX_BAR_WIDTH = 2000;
 final int MIN_BAR_HEIGHT = 300;
 final int MAX_BAR_HEIGHT = 1000;
+final int FLIGHTS_PER_PAGE = 50;
 final String MAIN_FILE_NAME = "flights2k.csv";
 final String BIG_FONT = "AgencyFB-Bold-20.vlw";
 final String MEDIUM_FONT = "AgencyFB-Bold-15.vlw";

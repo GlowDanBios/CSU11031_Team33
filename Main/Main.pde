@@ -97,7 +97,7 @@ void setup () {
   activeScreen = controlsScreen;
 
   // Initialize the table view for displaying flight data
-  gTable = new TableView(table, 0, 100); //<>//
+  gTable = new TableView(table, 0, 100);
   tableScreen.addWidget(gTable);
   searchButton.addObserver(new SearchFilter(gTable));  // Add event listeners to buttons
   clearButton.addObserver(new SearchFilter(gTable));

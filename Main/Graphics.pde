@@ -19,13 +19,17 @@ class TableView extends Widget {
   Table displayedTable;
   Table beforeSortTable;
   int[] columnStarts;
+  int currentPage;
   String sortedBy;
   boolean sortReverse = false;
   Button[] columnNames;
+  Button forwardPage;
+  Button backPage;
   ArrayList<Button> mapButtons;
 
   TableView(Table table, int x, int y) {
     super(x, y);
+    currentPage = 0;
     this.table = table;
     displayedTable = cleanData(table);
     setColumnWidths();
@@ -37,6 +41,10 @@ class TableView extends Widget {
       tableScreen.addWidget(columnNames[i]);
       columnNames[i].addObserver(obs);
     }
+    forwardPage = new Button(x+columnStarts[columnStarts.length-1]/2, y+ROW_HEIGHT*FLIGHTS_PER_PAGE+1, 40, 30, "Next");
+    forwardPage.addObserver(new PageClick(this));
+    backPage = new Button(x+columnStarts[columnStarts.length-1]/2-170, y+ROW_HEIGHT*FLIGHTS_PER_PAGE+1, 40, 30, "Back");
+    backPage.addObserver(new PageClick(this));
     //setupMapButtons();
   }
 
@@ -52,7 +60,7 @@ class TableView extends Widget {
         return;
       }
       String[] col = displayedTable.getStringColumn(i);
-      for (int j = 0; j<col.length; j++) {
+      for (int j = FLIGHTS_PER_PAGE*currentPage; j<FLIGHTS_PER_PAGE*(currentPage+1); j++) {
         if ((int)textWidth(col[j])>width) width = (int)textWidth(col[j]);
       }
       if (i==0) {
@@ -66,7 +74,7 @@ class TableView extends Widget {
 
   void setupMapButtons() {
     mapButtons = new ArrayList<Button>();
-    for (int i = 0; i<displayedTable.getRowCount(); i++) {
+    for (int i = FLIGHTS_PER_PAGE*currentPage; i<FLIGHTS_PER_PAGE*(currentPage+1); i++) {
       Button b = new Button(x+columnStarts[columnStarts.length-1], y+i*ROW_HEIGHT, 40, ROW_HEIGHT, "MAP");
       b.addObserver(new MapButton(activeScreen, table.getRow(i)));
       b.setColor(color(255));
@@ -79,7 +87,7 @@ class TableView extends Widget {
     text("Displayed flights: "+displayedTable.getRowCount(), screenX+x, screenY+y-ROW_HEIGHT*1.5);
     for (int i = 0; i <displayedTable.getColumnCount(); i++) {
       fill(TEXT_COLOR);
-      line(screenX+x+columnStarts[i], screenY+y, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT*displayedTable.getRowCount());
+      line(screenX+x+columnStarts[i], screenY+y, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT*FLIGHTS_PER_PAGE);
       if (sortedBy!=null && sortedBy.equals(columnNames[i].text)) {
         if (sortReverse) {
           columnNames[i].setColor(color(200, 0, 0, 100));
@@ -91,22 +99,23 @@ class TableView extends Widget {
       }
       columnNames[i].draw(screenX, screenY);
       String[] col = displayedTable.getStringColumn(i);
-      for (int j = 0; j<col.length; j++) {
+      int lastRow = FLIGHTS_PER_PAGE*(currentPage+1)<displayedTable.getRowCount()?FLIGHTS_PER_PAGE*(currentPage+1):displayedTable.getRowCount();
+      for (int j = FLIGHTS_PER_PAGE*currentPage; j<lastRow; j++) {
         if (i == 1) {
           if (isCancelled(col[j])) {
             fill(200, 0, 0, 100);
-            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
+            rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
             fill(TEXT_COLOR);
           } else if (isDiverted(col[j])) {
             fill(200, 200, 0, 100);
-            rect(screenX+x, screenY+y+20+j*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
+            rect(screenX+x, screenY+y+20+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, columnStarts[columnStarts.length-1], ROW_HEIGHT);
             fill(TEXT_COLOR);
           }
-          mapButtons.get(j).draw(screenX, screenY);
+          //mapButtons.get(j).draw(screenX, screenY);
         }
-        line(screenX+x, screenY+y+j*ROW_HEIGHT, screenX+x+columnStarts[columnStarts.length-1], screenY+y+j*ROW_HEIGHT);
+        line(screenX+x, screenY+y+j%FLIGHTS_PER_PAGE*ROW_HEIGHT, screenX+x+columnStarts[columnStarts.length-1], screenY+y+j%FLIGHTS_PER_PAGE*ROW_HEIGHT);
         if (i<10 || i>13) {
-          text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
+          text(col[j], screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j%FLIGHTS_PER_PAGE*20);
         } else {
           String a = ""+col[j];
           if (a.length()==1) {
@@ -118,10 +127,15 @@ class TableView extends Widget {
           } else {
             a = a.substring(0, 2)+":"+a.substring(2);
           }
-          text(a, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j*20);
+          text(a, screenX+x+columnStarts[i], screenY+y+ROW_HEIGHT+j%FLIGHTS_PER_PAGE*20);
         }
       }
     }
+    if (currentPage<displayedTable.getRowCount()/FLIGHTS_PER_PAGE)
+      forwardPage.draw(screenX, screenY);
+    if (currentPage>0)
+      backPage.draw(screenX, screenY);
+    text("Page "+currentPage+" out of "+displayedTable.getRowCount()/FLIGHTS_PER_PAGE, screenX+forwardPage.x-120, screenY+forwardPage.y+20);
   }
 
 
@@ -200,7 +214,7 @@ class TableView extends Widget {
       displayedTable.sort(col);
       sortedBy = col;
     }
-    setupMapButtons();
+    //setupMapButtons();
   }
 
   void filter(String column, String query) {
@@ -213,7 +227,7 @@ class TableView extends Widget {
     }
     if (!flag) return;
     displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
-    setupMapButtons();
+    //setupMapButtons();
   }
 
   void clear() {
@@ -223,9 +237,11 @@ class TableView extends Widget {
   }
 
   void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
-    for (Button b : mapButtons) {
-      b.event(screenX, screenY, mouseX, mouseY, click);
-    }
+    //for (Button b : mapButtons) {
+    //  b.event(screenX, screenY, mouseX, mouseY, click);
+    //}
+    forwardPage.event(screenX, screenY, mouseX, mouseY, click);
+    backPage.event(screenX, screenY, mouseX, mouseY, click);
   }
 }
 
@@ -422,6 +438,7 @@ class Button extends Widget {
     this.height = height;
     this.text = text;
     observers = new ArrayList<ButtonObserver>();
+    setColor(color(255));
   }
 
   void draw(int screenX, int screenY) {
@@ -710,6 +727,22 @@ class Text extends Widget {
 
   void draw(int screenX, int screenY) {
     text(txt, screenX+x, screenY+y);
+  }
+}
+
+class PageClick implements ButtonObserver {
+  TableView table;
+
+  PageClick(TableView table) {
+    this.table = table;
+  }
+
+  void buttonClicked(Button button) {
+    if (button.text.equals("Back")) {
+      if (table.currentPage>0) table.currentPage--;
+    } else if (button.text.equals("Next")) {
+      if (table.currentPage<table.displayedTable.getRowCount()/FLIGHTS_PER_PAGE) table.currentPage++;
+    }
   }
 }
 
