@@ -97,29 +97,41 @@ class Query {
     }
     return frequencyByDay;
   }
-  String[] frequentRoutes() {
-    String[] origins =  new String[5];
-    int i = 0;
-    int j = 0;
-    int[] gorsepkay = new int[0];
-    while (origins[4] == null) {
-      String originy = table.getString(i, "ORIGIN");
-      boolean containsTarget = false;
-
-      for (String str : origins) {
-        if (originy.equals(str)) {
-          containsTarget = true;
+  String[] popularAirports(int numAirports){
+    List<CustomItem> airportList = new ArrayList<>();
+    ArrayList<String> airports = new ArrayList<>();
+    for(int i=0; i<table.getRowCount(); i++){
+      String airport = table.getString(i, "ORIGIN");
+      boolean inList = false;
+      for(int j=0; j<airports.size(); j++){
+        if (airport.equals(airports.get(j))){
+          inList = true;
           break;
         }
       }
-      if (!containsTarget) {
-        origins[j] = originy;
-        j++;
-      }
-
-      i++;
+      if(!inList){
+        airportList.add(new CustomItem(airport, getFlight(airport, "ORIGIN")));
+        airports.add(airport);
+      }     
     }
-    return origins;
+
+    Collections.sort(airportList, Comparator.comparingInt(CustomItem::getIntValue).reversed());
+    String[] sortedList = new String[numAirports];
+    for(int k=0; k<numAirports; k++){
+       CustomItem item = airportList.get(k);
+       sortedList[k] = item.getString();
+    }
+
+    return sortedList;  
+  }
+  
+  int[] intValuesPopularflights(int numberAirports){
+      int[] values = new int[numberAirports];
+      String[] airportNames = popularAirports(numberAirports);
+      for(int i=0; i<numberAirports; i++){
+        values[i] = getFlight(airportNames[i], "ORIGIN");
+      }
+      return values;
   }
 }
 static int[] unreliable(Table table, String[] indVariable, String cat, String type) {
@@ -201,4 +213,22 @@ static int[] frequencyDays(Table table, String startDat, String endDat) {
     println(frequencyByDay[i]);
   }
   return frequencyByDay;
+}
+
+class CustomItem {
+    private String string;
+    private int intValue;
+
+    public CustomItem(String string, int intValue) {
+        this.string = string;
+        this.intValue = intValue;
+    }
+
+    public String getString() {
+        return string;
+    }
+
+    public int getIntValue() {
+        return intValue;
+    }
 }
