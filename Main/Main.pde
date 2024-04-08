@@ -45,28 +45,7 @@ boolean keyW = false;
 boolean keyA = false;
 boolean keyS = false;
 boolean keyD = false;
-//import processing.sound.*;
-//SoundFile file;
 
-//PImage[] clouds = new PImage[6];
-//PImage plane;
-
-//int cloudCount = 6;
-//Cloud[] cloudObjects = new Cloud[cloudCount];
-//Plane planeObject;
-//color bgColor1 = color(250);
-//color bgColor = color(255); // Background color to remove
-
-//// Screen states
-//final int HOME_SCREEN = 0;
-//final int GRAPHS_SCREEN = 1;
-//final int TABLE_SCREEN = 2;
-
-//int currentScreen = HOME_SCREEN;
-
-//Buttons graphsButton;
-//Buttons tableButton;
-//Buttons homeButton;
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT);
