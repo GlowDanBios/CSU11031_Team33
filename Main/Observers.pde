@@ -58,7 +58,19 @@ class QueryShow implements ButtonObserver {
       if (barWidth>MAX_BAR_WIDTH) barWidth = MAX_BAR_WIDTH;
       if (barHeight<MIN_BAR_HEIGHT) barHeight = MIN_BAR_HEIGHT;
       if (barHeight>MAX_BAR_HEIGHT) barHeight = MAX_BAR_HEIGHT;
-      barChart = new BarChart(10, 60, barWidth, barHeight, "Origin Airport", "Cancelled flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN"), airports.toArray(new String[airports.size()]));
+      int barStartPoint = 0;
+      int barHeightStart = 0;
+      if ((WINDOW_WIDTH/2 - barWidth/2)<0) {
+        barStartPoint = 10;
+      } else{
+        barStartPoint = WINDOW_WIDTH/2 - barWidth/2;
+      }
+      if((WINDOW_HEIGHT/2 - barHeight) <20){
+        barHeightStart = 60;
+      }else{
+        barHeightStart = WINDOW_HEIGHT/2 - barHeight;
+      }
+      barChart = new BarChart(barStartPoint, barHeightStart, barWidth, barHeight, "Origin Airport", "Cancelled flights", unreliable(table.displayedTable, airports.toArray(new String[airports.size()]), "DEP_TIME", "ORIGIN"), airports.toArray(new String[airports.size()]));
       newScreen.addWidget(barChart);
       activeScreen = newScreen;
     } else if (button.text.equals("Display delayed flights")) {
