@@ -1,9 +1,9 @@
 final int WINDOW_WIDTH = 1800;
 final int WINDOW_HEIGHT = 1200;
-final color BACKGROUND_COLOR = color(255);
+final color BACKGROUND_COLOR = color(200, 230, 255);
 final color TEXT_COLOR = color(0);
 final color TITLE_COLOR = color(10, 10, 10, 150);
-final color BUTTON_COLOR = color(255);
+final color BUTTON_COLOR = color(144, 238, 144);
 final color HIGHLIGHT_COLOR = color(200, 200, 0, 150);
 final int CHARACTER_WIDTH = 4;
 final int SCROLL_SPEED = 10;
