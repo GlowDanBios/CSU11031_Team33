@@ -115,11 +115,14 @@ class Query {
       }     
     }
 
-    Collections.sort(airportList, Comparator.comparingInt(CustomItem::getIntValue).reversed());
-    String[] sortedList = new String[numAirports];
+     String[] sortedList = new String[numAirports];
+    Collections.sort(airportList, (item1, item2) -> item2.getIntValue() - item1.getIntValue());
     for(int k=0; k<numAirports; k++){
        CustomItem item = airportList.get(k);
        sortedList[k] = item.getString();
+       for (int p = 0; p<5; p++){
+       System.out.println(sortedList[p] + "kk");
+       }
     }
 
     return sortedList;  
