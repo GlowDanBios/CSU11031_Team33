@@ -29,16 +29,7 @@ PFont bigFont;
 PFont mediumFont;
 PFont smallFont;
 Map USAMap;
-AirportsList airportsList;
-Airport atlanta;
-Airport anchorage;
-Airport albany;
-Airport boston;
-Airport albuquerque;
-Airport austin;
-Airport baltimore;
-Airport bozeman;
-Airport la;
+
 AirportsList airportsList;
 Airport atlanta;
 Airport anchorage;
