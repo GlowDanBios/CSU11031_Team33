@@ -21,6 +21,7 @@ Slider airportSlider;
 DateVerify startDateVerify;
 DateVerify endDateVerify;
 Query origin;
+Query initAirports;
 Text filterText;
 Text weekdaysText;
 Text airportsText;
@@ -38,6 +39,20 @@ Airport austin;
 Airport baltimore;
 Airport bozeman;
 Airport la;
+AirportsList airportsList;
+Airport atlanta;
+Airport anchorage;
+Airport albany;
+Airport boston;
+Airport albuquerque;
+Airport austin;
+Airport baltimore;
+Airport bozeman;
+Airport la;
+Airport dallas;
+Airport denver;
+Airport charlotte;
+Airport chicago;
 PImage mapImage;
 
 int rowX, rowStart, rowHeight;
@@ -76,6 +91,7 @@ void setup () {
   println("Start");
   // Load flight data from the specified CSV file
   table = loadTable("Files/"+MAIN_FILE_NAME, "header");
+  mapImage = loadImage("USA-Country-Outline.jpg");
   println("Download done");
   // Initialize the main screen for displaying flight data
   rowX = WINDOW_WIDTH/3;
@@ -85,6 +101,8 @@ void setup () {
 
   tableScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   controlsScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
+
+  initAirports = new Query(table, "", "", "ORIGIN");
 
 
   //First row
@@ -156,15 +174,19 @@ void setup () {
 
   mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   USAMap = new Map(60, 60);
-  atlanta = new Airport(atlantaX, atlantaY);
-  anchorage = new Airport(anchorageX, anchorageY);
-  albany = new Airport(albanyX, albanyY);
-  boston = new Airport(bostonX, bostonY);
-  albuquerque = new Airport(albuquerqueX, albuquerqueY);
-  austin = new Airport(austinX, austinY);
-  baltimore = new Airport(baltimoreX, baltimoreY);
-  bozeman = new Airport(bozemanX, bozemanY);
-  la = new Airport(laX, laY);
+  atlanta = new Airport(atlantaX, atlantaY, "ATL");
+  anchorage = new Airport(anchorageX, anchorageY, "ANC");
+  albany = new Airport(albanyX, albanyY, "ALB");
+  boston = new Airport(bostonX, bostonY, "BOS");
+  albuquerque = new Airport(albuquerqueX, albuquerqueY, "ABQ");
+  austin = new Airport(austinX, austinY, "AUS");
+  baltimore = new Airport(baltimoreX, baltimoreY, "BWI");
+  bozeman = new Airport(bozemanX, bozemanY, "BZN");
+  la = new Airport(laX, laY, "LAX");
+  dallas = new Airport(dallasX, dallasY, "DFW");
+  denver = new Airport(denverX, denverY, "DEN");
+  charlotte = new Airport(charlotteX, charlotteY, "CLT");
+  chicago = new Airport(chicagoX, chicagoY, "ORD");
   airportsList = new AirportsList();
   airportsList.addAirport(atlanta);
   airportsList.addAirport(anchorage);
@@ -175,6 +197,10 @@ void setup () {
   airportsList.addAirport(baltimore);
   airportsList.addAirport(bozeman);
   airportsList.addAirport(la);
+  airportsList.addAirport(dallas);
+  airportsList.addAirport(charlotte);
+  airportsList.addAirport(denver);
+  airportsList.addAirport(chicago);
   mapScreen.addWidget(USAMap);
 
   // Set up fonts for text rendering
@@ -225,8 +251,7 @@ void draw() {
   //}
 
   if (activeScreen == mapScreen) {
-    airportsList.displayAirports();
-    la.connectAirports(la, austin);
+    la.getTopAirports(6, initAirports.getPopularAirports());
   }
 }
 /**
@@ -251,6 +276,8 @@ void keyPressed() {
       activeScreen = tableScreen;
     } else if (key == 'k') {
       gTable.filter(searchField.getInput(), search.getInput());
+    } else if (key == 'b') {
+      activeScreen = mapScreen;
     }
   } else {
     selectedWidget.event(activeScreen.getX(), activeScreen.getY(), mouseX, mouseY, false);
