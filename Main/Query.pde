@@ -5,26 +5,24 @@ class Query {
   String origin1;
   String origin2;
   String category;
+  String[] popularAirports;
 
   Query(Table table1, String Origin1, String Origin2, String Category) {
     table = table1;
     origin1 = Origin1;
     origin2 = Origin2;
     category = Category;
-    popularAirports = popularAirports(150);
+    popularAirports = popularAirports(10);
+
   }
 
-  int getFlight(String entry) {
+  int getFlight(String entry, String category) {
     int i = 0;
     for (TableRow row : table.findRows(entry, category)) {
       i++;
     }
     return i;
   }
-
-String[] getPopularAirports () {
-    return popularAirports;
-}
 
   int[] unreliable(Table table, String[] indVariable, String cat, String type) {
     int[] delays  = new int[indVariable.length];
@@ -106,7 +104,7 @@ String[] getPopularAirports () {
     return frequencyByDay;
   }
   String[] popularAirports(int numAirports){
-    List<CustomItem> airportList = new ArrayList<>();
+    ArrayList<CustomItem> airportList = new ArrayList<>();
     ArrayList<String> airports = new ArrayList<>();
     for(int i=0; i<table.getRowCount(); i++){
       String airport = table.getString(i, "ORIGIN");
@@ -144,6 +142,10 @@ String[] getPopularAirports () {
       }
       return values;
   }
+  String[] getPopularAirports () {
+    return popularAirports;
+}
+  
 }
 static int[] unreliable(Table table, String[] indVariable, String cat, String type) {
   int[] delays  = new int[indVariable.length];
