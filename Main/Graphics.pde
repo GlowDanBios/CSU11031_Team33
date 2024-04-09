@@ -69,10 +69,12 @@ class Map extends Widget {
 class Airport {
 
   int x, y;
+  String code;
 
-  Airport(int x, int y) {
+  Airport(int x, int y, String code) {
     this.x = x;
     this.y = y;
+    this.code = code;
   }
 
   void draw(int x, int y) {
@@ -85,12 +87,23 @@ class Airport {
   int getY() {
     return y;
   }
+  String getCode() {
+    return code; 
+  }
 
   void connectAirports(Airport airportA, Airport airportB) {
     stroke(191, 19, 19);
     strokeWeight(4);
     line(airportA.x, airportA.y, airportB.x, airportB.y);
   }
+  
+  void getTopAirports(int n, String []popularAirports) {
+    String[] top5Airports = new String[n];
+    arrayCopy(popularAirports, 0, top5Airports, 0, n-1);
+    ArrayList<Airport> top5AirportsObj = new ArrayList<Airport>();
+    top5AirportsObj = airportsList.mostPopularAirports(top5Airports);
+    airportsList.displayAirports(top5AirportsObj);
+}
 }
 
 
@@ -102,8 +115,8 @@ class AirportsList {
   void addAirport(Airport airport) {
     points.add(airport);
   }
-  void displayAirports() {
-    for (Airport airport : points) {
+  void displayAirports(ArrayList<Airport> top5Airports) {
+    for (Airport airport : top5Airports) {
       airport.draw(airport.getX(), airport.getY());
     }
     System.out.println("hey");
@@ -111,6 +124,17 @@ class AirportsList {
   ArrayList<Airport> getPoints() {
     return points;
   }
+  ArrayList<Airport> mostPopularAirports(String[]airportCodes ) {
+    ArrayList<Airport> mostPopularAirports = new ArrayList<Airport>();
+    for (int i = 0; i<airportCodes.length; i++) {
+   for (Airport airports : points) {
+    if ( airports.getCode().equalsIgnoreCase( airportCodes[i])) {
+      mostPopularAirports.add(airports);
+   }
+  }
+    }
+    return mostPopularAirports;
+}
 }
 
 
