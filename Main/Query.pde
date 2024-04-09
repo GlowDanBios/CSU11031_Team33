@@ -19,6 +19,10 @@ class Query {
     return i;
   }
 
+String[] getPopularAirports () {
+    return popularAirports;
+}
+
   int[] unreliable(Table table, String[] indVariable, String cat, String type) {
     int[] delays  = new int[indVariable.length];
     for (int i=0; i<indVariable.length; i++) {
