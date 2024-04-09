@@ -126,9 +126,6 @@ class Query {
     for(int k=0; k<numAirports; k++){
        CustomItem item = airportList.get(k);
        sortedList[k] = item.getString();
-       for (int p = 0; p<5; p++){
-       System.out.println(sortedList[p] + "kk");
-       }
     }
 
     return sortedList;  
