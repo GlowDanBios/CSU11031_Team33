@@ -1,3 +1,6 @@
+import java.util.Collections;
+import java.util.Comparator;
+
 class Query {
   String origin1;
   String origin2;
