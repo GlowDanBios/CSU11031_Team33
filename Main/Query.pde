@@ -8,6 +8,7 @@ class Query {
     origin1 = Origin1;
     origin2 = Origin2;
     category = Category;
+    popularAirports = popularAirports(150);
   }
 
   int getFlight(String entry) {
