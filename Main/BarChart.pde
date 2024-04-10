@@ -28,7 +28,7 @@ class BarChart extends Widget {
       bars[i].draw(screenX+x+20+i*(colSpace+colWidth), screenY+y, screenX+x);
     }
     text(xAxis, screenX+x, screenY+y);
-    text(yAxis, x+width+20, screenY+y+height+35);
+    text(yAxis, screenX+x+width+20, screenY+y+height+35);
   }
 }
 
