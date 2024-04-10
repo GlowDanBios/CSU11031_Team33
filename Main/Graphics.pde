@@ -69,17 +69,20 @@ class Map extends Widget {
 class Airport {
 
   int x, y;
-  String code;
+  String code, cityName;
 
-  Airport(int x, int y, String code) {
+  Airport(int x, int y, String code, String cityName) {
     this.x = x;
     this.y = y;
     this.code = code;
+    this.cityName = cityName;
   }
 
   void draw(int x, int y) {
     fill(245, 158, 66);
     ellipse(this.x, this.y, 15, 15);
+    text(cityName, x, y+20);
+    
   }
   int getX() {
     return x;
