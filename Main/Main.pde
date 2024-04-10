@@ -242,7 +242,7 @@ void draw() {
   //}
 
   if (activeScreen == mapScreen) {
-    la.getTopAirports(6, initAirports.popularAirports(airportSlider.getValue()));
+    la.getTopAirports(airportSlider.getValue(), initAirports.popularAirports(airportSlider.getValue()));
   }
 }
 /**
