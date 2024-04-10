@@ -137,8 +137,8 @@ void setup () {
   controlsScreen.addWidget(showMapButton);
   showTableButton = new Button(rowX+670, rowStart+rowHeight*4, 150, 30, "Display table entries");
   controlsScreen.addWidget(showTableButton);
-  
-  
+
+
   filterText = new Text(rowX, rowStart+20, "Filter entries: ");
   controlsScreen.addWidget(filterText);  // Add UI elements to the main screen
 
@@ -175,13 +175,13 @@ void setup () {
   mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   mapScreen.addWidget(b);
   USAMap = new Map(10, 50);
-  atlanta = new Airport(atlantaX, atlantaY, "ATL","Atlanta, GE");
-  anchorage = new Airport(anchorageX, anchorageY, "ANC", "Anchorage, AL");
+  atlanta = new Airport(atlantaX, atlantaY, "ATL", "Atlanta, GA");
+  anchorage = new Airport(anchorageX, anchorageY, "ANC", "Anchorage, AK");
   albany = new Airport(albanyX, albanyY, "ALB", "Albany, NY");
   boston = new Airport(bostonX, bostonY, "BOS", "Boston, MA");
   albuquerque = new Airport(albuquerqueX, albuquerqueY, "ABQ", "Albuquerque, NM");
   austin = new Airport(austinX, austinY, "AUS", "Austin, TX");
-  baltimore = new Airport(baltimoreX, baltimoreY, "BWI", "Baltimor, MD");
+  baltimore = new Airport(baltimoreX, baltimoreY, "BWI", "Baltimore, ML");
   bozeman = new Airport(bozemanX, bozemanY, "BZN", "Bozeman, MT");
   la = new Airport(laX, laY, "LAX", "Los Angeles, CA");
   dallas = new Airport(dallasX, dallasY, "DFW", "Dallas, TX");
