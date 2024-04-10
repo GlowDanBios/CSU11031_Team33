@@ -342,17 +342,3 @@ void mousePressed() {
     } 
   }
 }
-// written by James McNamee
-//ArrayList<DataPoint> queryDateRange(ArrayList<DataPoint> dataSet, Date startDate, Date endDate)
-//{
-//    ArrayList<DataPoint> results = new ArrayList<>();
-//    for (DataPoint dataPoint : dataSet)
-//   {
-//        Date flightDate = dataPoint.getDate();
-//        if (flightDate.after(startDate) && flightDate.before(endDate))
-//        {
-//            results.add(dataPoint);
-//        }
-//    }
-//    return results;
-//}
