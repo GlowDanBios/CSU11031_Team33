@@ -99,7 +99,7 @@ class Airport {
   
   void getTopAirports(int n, String []popularAirports) {
     String[] top5Airports = new String[n];
-    arrayCopy(popularAirports, 0, top5Airports, 0, n-1);
+    arrayCopy(popularAirports, 0, top5Airports, 0, n);
     ArrayList<Airport> top5AirportsObj = new ArrayList<Airport>();
     top5AirportsObj = airportsList.mostPopularAirports(top5Airports);
     airportsList.displayAirports(top5AirportsObj);
