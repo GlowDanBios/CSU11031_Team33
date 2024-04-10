@@ -44,6 +44,9 @@ Airport dallas;
 Airport denver;
 Airport charlotte;
 Airport chicago;
+Airport honolulu;
+Airport ny;
+Airport seattle;
 PImage mapImage;
 
 int rowX, rowStart, rowHeight;
@@ -178,6 +181,9 @@ void setup () {
   denver = new Airport(denverX, denverY, "DEN");
   charlotte = new Airport(charlotteX, charlotteY, "CLT");
   chicago = new Airport(chicagoX, chicagoY, "ORD");
+   honolulu = new Airport(honoluluX, honoluluY, "HNL", "Honolulu, HI"); 
+  ny = new Airport(nyX, nyY, "JFK", "New York, NY");
+  seattle = new Airport(seattleX, seattleY, "SEA", "Seattle, WA");
   airportsList = new AirportsList();
   airportsList.addAirport(atlanta);
   airportsList.addAirport(anchorage);
@@ -192,6 +198,9 @@ void setup () {
   airportsList.addAirport(charlotte);
   airportsList.addAirport(denver);
   airportsList.addAirport(chicago);
+  airportsList.addAirport(honolulu);
+  airportsList.addAirport(ny);
+  airportsList.addAirport(seattle);
   mapScreen.addWidget(USAMap);
 
   // Set up fonts for text rendering
