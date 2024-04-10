@@ -12,6 +12,7 @@ Button cancelledButton;
 Button delayedButton;
 Button weekDaysButton;
 Button showTableButton;
+Button showMapButton;
 Input search;
 Input searchField;
 Input startDateInput;
@@ -85,7 +86,7 @@ void setup () {
   println("Start");
   // Load flight data from the specified CSV file
   table = loadTable("Files/"+MAIN_FILE_NAME, "header");
-  mapImage = loadImage("USA-Country-Outline.jpg");
+  mapImage = loadImage("Files/USA-Country-Outline.jpg");
   println("Download done");
   // Initialize the main screen for displaying flight data
   rowX = WINDOW_WIDTH/3;
@@ -132,8 +133,12 @@ void setup () {
   controlsScreen.addWidget(cancelledButton);
   weekDaysButton = new Button(rowX+200, rowStart+rowHeight*4, 200, 30, "Display flights by days of the week");
   controlsScreen.addWidget(weekDaysButton);  // Add UI elements to the main screen
-  showTableButton = new Button(rowX+430, rowStart+rowHeight*4, 150, 30, "Display table entries");
+  showMapButton = new Button(rowX+440, rowStart+rowHeight*4, 190, 30, "Show popular airports on a map");
+  controlsScreen.addWidget(showMapButton);
+  showTableButton = new Button(rowX+670, rowStart+rowHeight*4, 150, 30, "Display table entries");
   controlsScreen.addWidget(showTableButton);
+  
+  
   filterText = new Text(rowX, rowStart+20, "Filter entries: ");
   controlsScreen.addWidget(filterText);  // Add UI elements to the main screen
 
@@ -162,26 +167,28 @@ void setup () {
   //delayedButton.addObserver(new QueryShow(gTable));
   weekDaysButton.addObserver(new QueryShow(gTable));
   showTableButton.addObserver(new TableShow(gTable));
+  showMapButton.addObserver(new MapButton());
 
 
 
 
   mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-  USAMap = new Map(60, 60);
-  atlanta = new Airport(atlantaX, atlantaY, "ATL");
-  anchorage = new Airport(anchorageX, anchorageY, "ANC");
-  albany = new Airport(albanyX, albanyY, "ALB");
-  boston = new Airport(bostonX, bostonY, "BOS");
-  albuquerque = new Airport(albuquerqueX, albuquerqueY, "ABQ");
-  austin = new Airport(austinX, austinY, "AUS");
-  baltimore = new Airport(baltimoreX, baltimoreY, "BWI");
-  bozeman = new Airport(bozemanX, bozemanY, "BZN");
-  la = new Airport(laX, laY, "LAX");
-  dallas = new Airport(dallasX, dallasY, "DFW");
-  denver = new Airport(denverX, denverY, "DEN");
-  charlotte = new Airport(charlotteX, charlotteY, "CLT");
-  chicago = new Airport(chicagoX, chicagoY, "ORD");
-   honolulu = new Airport(honoluluX, honoluluY, "HNL", "Honolulu, HI"); 
+  mapScreen.addWidget(b);
+  USAMap = new Map(10, 50);
+  atlanta = new Airport(atlantaX, atlantaY, "ATL","Atlanta, GE");
+  anchorage = new Airport(anchorageX, anchorageY, "ANC", "Anchorage, AL");
+  albany = new Airport(albanyX, albanyY, "ALB", "Albany, NY");
+  boston = new Airport(bostonX, bostonY, "BOS", "Boston, MA");
+  albuquerque = new Airport(albuquerqueX, albuquerqueY, "ABQ", "Albuquerque, NM");
+  austin = new Airport(austinX, austinY, "AUS", "Austin, TX");
+  baltimore = new Airport(baltimoreX, baltimoreY, "BWI", "Baltimor, MD");
+  bozeman = new Airport(bozemanX, bozemanY, "BZN", "Bozeman, MT");
+  la = new Airport(laX, laY, "LAX", "Los Angeles, CA");
+  dallas = new Airport(dallasX, dallasY, "DFW", "Dallas, TX");
+  denver = new Airport(denverX, denverY, "DEN", "Denver, CO");
+  charlotte = new Airport(charlotteX, charlotteY, "CLT", "Charlotte, NC");
+  chicago = new Airport(chicagoX, chicagoY, "ORD", "Chicago, IL");
+  honolulu = new Airport(honoluluX, honoluluY, "HNL", "Honolulu, HI");
   ny = new Airport(nyX, nyY, "JFK", "New York, NY");
   seattle = new Airport(seattleX, seattleY, "SEA", "Seattle, WA");
   airportsList = new AirportsList();
@@ -350,5 +357,3 @@ void mousePressed() {
 //  homeButton = new Buttons("Home", 50, 50);
 //  homeButton.display();
 //}
-
-

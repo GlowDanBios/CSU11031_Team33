@@ -123,22 +123,28 @@ class CloseButton implements ButtonObserver {
   }
 }
 
-class MapButton implements ButtonObserver {
-  Screen oldScreen;
-  TableRow flight;
+class PageClick implements ButtonObserver {
+  TableView table;
 
-  MapButton(Screen screen, TableRow flight) {
-    oldScreen = screen;
-    this.flight = flight;
+  PageClick(TableView table) {
+    this.table = table;
   }
 
   void buttonClicked(Button button) {
-    oldScreen = activeScreen;
-    Screen newScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
-    Button b = new Button(10, 10, 100, 30, "Close");
-    b.addObserver(new CloseButton(oldScreen));
-    b.setColor(color(255));
-    newScreen.addWidget(b);
+    if (button.text.equals("Back")) {
+      if (table.currentPage>0) table.currentPage--;
+    } else if (button.text.equals("Next")) {
+      if (table.currentPage<table.displayedTable.getRowCount()/FLIGHTS_PER_PAGE) table.currentPage++;
+    }
+  }
+}
+
+class MapButton implements ButtonObserver {
+
+  MapButton() {
+  }
+
+  void buttonClicked(Button button) {
     activeScreen = mapScreen;
   }
 }

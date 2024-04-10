@@ -15,13 +15,6 @@ class Widget {
 }
 
 
-
-
-
-
-
-
-
 void screenMove() {
   if (selectedWidget == null) {
     if (keyW && !keyA && !keyS && !keyD) {
@@ -62,8 +55,10 @@ class Map extends Widget {
     ArrayList<Airport> points = new ArrayList<Airport>();
   }
 
-  void draw(int x, int y) {
-    image(mapImage, 50, 10, 1000, 800);
+  void draw(int screenX, int screenY) {
+    println(screenX);
+    println(y);
+    image(mapImage, screenX+x, screenY+y, 1000, 800);
   }
 }
 class Airport {
@@ -78,10 +73,10 @@ class Airport {
     this.cityName = cityName;
   }
 
-  void draw(int x, int y) {
+  void draw(int screenX, int screenY) {
     fill(245, 158, 66);
-    ellipse(this.x, this.y, 15, 15);
-    text(cityName, x, y+20);
+    ellipse(activeScreen.getX()+x, activeScreen.getY()+y, 15, 15);
+    text(cityName, activeScreen.getX()+x, activeScreen.getY()+y+20);
     
   }
   int getX() {
@@ -122,7 +117,6 @@ class AirportsList {
     for (Airport airport : top5Airports) {
       airport.draw(airport.getX(), airport.getY());
     }
-    System.out.println("hey");
   }
   ArrayList<Airport> getPoints() {
     return points;
@@ -156,21 +150,6 @@ class Text extends Widget {
   }
 }
 
-class PageClick implements ButtonObserver {
-  TableView table;
-
-  PageClick(TableView table) {
-    this.table = table;
-  }
-
-  void buttonClicked(Button button) {
-    if (button.text.equals("Back")) {
-      if (table.currentPage>0) table.currentPage--;
-    } else if (button.text.equals("Next")) {
-      if (table.currentPage<table.displayedTable.getRowCount()/FLIGHTS_PER_PAGE) table.currentPage++;
-    }
-  }
-}
 
 
 class Screen {

@@ -56,15 +56,15 @@ class TableView extends Widget {
     }
   }
 
-  void setupMapButtons() {
-    mapButtons = new ArrayList<Button>();
-    for (int i = FLIGHTS_PER_PAGE*currentPage; i<FLIGHTS_PER_PAGE*(currentPage+1); i++) {
-      Button b = new Button(x+columnStarts[columnStarts.length-1], y+i*ROW_HEIGHT, 40, ROW_HEIGHT, "MAP");
-      b.addObserver(new MapButton(activeScreen, table.getRow(i)));
-      b.setColor(color(255));
-      mapButtons.add(b);
-    }
-  }
+  //void setupMapButtons() {
+  //  mapButtons = new ArrayList<Button>();
+  //  for (int i = FLIGHTS_PER_PAGE*currentPage; i<FLIGHTS_PER_PAGE*(currentPage+1); i++) {
+  //    Button b = new Button(x+columnStarts[columnStarts.length-1], y+i*ROW_HEIGHT, 40, ROW_HEIGHT, "MAP");
+  //    b.addObserver(new MapButton(activeScreen, table.getRow(i)));
+  //    b.setColor(color(255));
+  //    mapButtons.add(b);
+  //  }
+  //}
 
 
   void draw(int screenX, int screenY) {
@@ -211,7 +211,7 @@ class TableView extends Widget {
         }
       }
       if (!flag) return;
-      displayedTable = new Table(displayedTable.matchRows("^.*"+query.toUpperCase()+".*$", column.toUpperCase()));
+      displayedTable = new Table(displayedTable.matchRows("^.*"+query+".*$", column.toUpperCase()));
       //setupMapButtons();
     }
   }
@@ -219,7 +219,6 @@ class TableView extends Widget {
   void clear() {
     sortedBy = null;
     displayedTable = table.copy();
-    setupMapButtons();
   }
 
   void event(int screenX, int screenY, int mouseX, int mouseY, boolean click) {
