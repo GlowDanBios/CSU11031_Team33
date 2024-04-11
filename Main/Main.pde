@@ -188,7 +188,7 @@ void setup () {
   mapScreen = new Screen(TABLE_TOP_BORDER, TABLE_LEFT_BORDER);
   mapScreen.addWidget(b);
   USAMap = new Map(10, 50);
-  atlanta = new Airport(atlantaX, atlantaY, "ATL", "Atlanta, GA");
+   atlanta = new Airport(atlantaX, atlantaY, "ATL", "Atlanta, GA");
   anchorage = new Airport(anchorageX, anchorageY, "ANC", "Anchorage, AK");
   albany = new Airport(albanyX, albanyY, "ALB", "Albany, NY");
   boston = new Airport(bostonX, bostonY, "BOS", "Boston, MA");
@@ -219,6 +219,7 @@ void setup () {
   sanJuan = new Airport(sanJuanX, sanJuanY, "SJU", "San Juan, PR");
   ketchikan = new Airport(ketchikanX, ketchikanY, "KTN", "Ketchikan, AK");
   phoenix = new Airport(phoenixX, phoenixY, "PHX", "Phoenix, AZ");
+  dallasFW = new Airport(dallasX, dallasY, "DFW", "Dallas, TX");
   airportsList = new AirportsList();
   airportsList.addAirport(atlanta);
   airportsList.addAirport(anchorage);
@@ -252,6 +253,7 @@ void setup () {
   airportsList.addAirport(ketchikan);
   airportsList.addAirport(phoenix);
   airportsList.addAirport(dallas);
+  airportsList.addAirport(dallasFW);
   mapScreen.addWidget(USAMap);
 
   // Set up fonts for text rendering
